@@ -6,8 +6,10 @@ Created on Mon Sep 24 14:48:51 2018
 @author: marcos
 """
 import os
+from orderedset import OrderedSet
 #%%
-categorias = ('ruido','constante','silencio','exp','percu','seno','varias','subida','bajada')
+categorias = OrderedSet(['ruido','constante','silencio','exp',
+                         'percu','seno','varias','subida'])
 letras = ('r', 'k','s','e','p','c','v','b')
 leyenda_datos = ((''), ('frec'), (''), ('frec_i', 'frec_f'),
                  ('frec_i', 'frec_f', 'cant'), (''), 
@@ -15,9 +17,6 @@ leyenda_datos = ((''), ('frec'), (''), ('frec_i', 'frec_f'),
                  ('ordenada', 'pendiente'))
 conversor = dict(zip(letras, categorias))
 
-abecedario = [chr(c) for c in range(ord('a'),ord('z'))]
-codigo = {categorias[k]:abecedario[k] for k in range(len(categorias))}
-inv_codigo = {abecedario[k]:categorias[k] for k in range(len(categorias))}
 
 def corrijo_typos(datos):
     '''Corrijo toda una serie de typos que encontré. Sujeto a agregar más.'''
@@ -67,10 +66,38 @@ def procesar_archivo(file):
     #guardo objetos sílaba en la lista que devuelvo
     motivo = [Gesto(linea, file, nuevo=es_nuevo) for linea in temp]
     
-    #guardo la secuencia de sílabas de este archivo
-    secuencia = [codigo[g.categoria] for g in motivo]
-    
-    return motivo, ''.join(secuencia)
+    return motivo
+
+#Cuento las veces que aparece un string en otro string o elemento en lista
+def VecesQueAparece(completa, template):
+    seguir = True
+    apariciones = 0
+    while seguir:
+        try:
+            out = completa.index(template) #encuentra el template
+            completa = completa[out+1:] #recorta hasta donde encontró
+            apariciones += 1 #cuenta una aparición
+        except ValueError: #usa que .index() tira error si no encuentra nada
+            seguir = False
+                
+    return apariciones
+
+
+def armar_secuencias(motivos, codigo):
+    '''Armo las secuencias de cada canto de acuerdo al código'''
+    nombre_actual = ''
+    secuencias = []
+    for gesto in motivos:
+        
+        if nombre_actual == gesto.archivo:
+            #si estoy en el mismo archivo, apendeo la categoria
+            sec += codigo[gesto.categoria]
+        else:
+            #si no, guardo la secuencia e inicio una nueva
+            secuencias.append(sec)
+            sec = ''
+            
+    return secuencias
 
 ##No está andando
 #notas = {categ:[] for categ in ['high','constante','bajada','subida']}
@@ -121,11 +148,30 @@ class Gesto:
         y los guardo así. Por default, todos los barridos son subidas. Cuando
         corresponda, defino la categoría como bajada.'''
         
+
+        
         if self.categoria == conversor['b']:
             
             pendiente = (self.data[1] - self.data[0]) / self.duracion
             
-            if pendiente<0: 
-                self.categoria = categorias[-1] #bajada
+            if pendiente<0:
+                
+                nueva_cat = 'bajada'
+                global categorias
+                categorias.add(nueva_cat)
+        
+                self.categoria = nueva_cat #bajada
              
             self.data[1] = pendiente
+        
+    def separo_categoria(self, threshold, categoria, nueva_cat):
+        '''Separo los elementos de una categoría por duración: los mayores a
+        threshold se quedan como estaban, los otros pasan a una nueva categoría'''
+                
+        if self.categoria == categoria:
+            if self.duracion < threshold:
+                self.categoria = nueva_cat
+                
+                global categorias
+                categorias.add(nueva_cat)
+            

@@ -11,6 +11,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
+from skimage.filters import threshold_otsu
 
 #Consigo todos los archivos
 home = os.getcwd()
@@ -27,21 +28,20 @@ archivos.sort() #archivos ordenados alfabeticamente!!
 motivos = []
 secuencias = []
 for file in archivos:
-    motivo, secuencia = si.procesar_archivo(file)
-    motivos.extend(motivo)
-    secuencias.append(secuencia)
+    motivos.extend(si.procesar_archivo(file))
 
 #arreglo formato, extraigo duraciones y notas de potenciales highnotes:
-duraciones = {c:[] for c in si.categorias}
 
 for gesto in motivos:
     gesto.hago_pendiente()
-    duraciones[gesto.categoria].append(gesto.duracion)
-    
 
+#después de haber agregado 'bajada' a la lista
+duraciones = {c:[] for c in si.categorias}
+for gesto in motivos:
+    duraciones[gesto.categoria].append(gesto.duracion)
+   
 #%% Grafico histograma de duraciones
-            
-k = 0
+
 for k, cat in enumerate(si.categorias):
     ax = plt.subplot(3,3,k+1)
     ax.set_title('{} ({} totales)'.format(cat,len(duraciones[cat])))
@@ -49,7 +49,23 @@ for k, cat in enumerate(si.categorias):
     ax.set_xlim([0,0.12])
 
 ### SE VE SEPARACIÓN de dos tipos de silencio
-    
+
+#%% Separo en dos tipos de silencio:
+
+threshold = threshold_otsu(np.array(duraciones['silencio']))
+
+#Convierto los silencios cortos de categoría.
+for gesto in motivos:
+    gesto.separo_categoria(threshold, si.conversor['s'], 'sil_corto')
+   
+
+for k, cat in enumerate(si.categorias):
+    ax = plt.subplot(3,3,k+1)
+    ax.set_title('{} ({} totales)'.format(cat,len(duraciones[cat])))
+    ax.hist(duraciones[cat],range = [0,0.12])
+    ax.set_xlim([0,0.12])
+
+
 #%% Pendientes
 #TODO:
     #continuidad en frecuencia (implementado en versión anterior)
@@ -62,27 +78,15 @@ for k, cat in enumerate(si.categorias):
 #Una lista de 4 elementos donde cada una contiene todas las combinaciones 
 #posibles de 2, 3, 4 y 5 letras respectivas.
 
-codigo = si.codigo
-inv_codigo = si.inv_codigo
 categorias = si.categorias
+abecedario = [chr(c) for c in range(ord('a'),ord('z'))]
+codigo = {categorias[k]:abecedario[k] for k in range(len(categorias))}
+inv_codigo = {abecedario[k]:categorias[k] for k in range(len(categorias))}
+
 
 o = []
 for orden in range(4):
     o.append([''.join(l) for l in itertools.product(sorted(codigo.values()), repeat=orden+2)])
-
-#Cuento las veces que aparece un string en otro string o elemento en lista
-def VecesQueAparece(completa, template):
-    seguir = True
-    apariciones = 0
-    while seguir:
-        try:
-            out = completa.index(template) #encuentra el template
-            completa = completa[out+1:] #recorta hasta donde encontró
-            apariciones += 1 #cuenta una aparición
-        except ValueError: #usa que .index() tira error si no encuentra nada
-            seguir = False
-                
-    return apariciones
 
 
 #%% Hallo secuencias
@@ -97,7 +101,7 @@ for orden in o:
     for sec in orden:
         total = 0
         for canto in secuencias:
-            total += VecesQueAparece(canto,sec)
+            total += si.VecesQueAparece(canto,sec)
         if total == 0: total = np.nan
         esta_vez.append(total)
     veces.append(esta_vez)
