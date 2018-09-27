@@ -47,6 +47,9 @@ for k, cat in enumerate(si.categorias):
     ax.set_title('{} ({} totales)'.format(cat,len(duraciones[cat])))
     ax.hist(duraciones[cat],range = [0,0.12])
     ax.set_xlim([0,0.12])
+    ax.set_ylabel('Ocurrencia')
+    ax.set_xlabel('Duración [s]')
+plt.tight_layout()
 
 ### SE VE SEPARACIÓN de dos tipos de silencio
 
@@ -58,12 +61,25 @@ threshold = threshold_otsu(np.array(duraciones['silencio']))
 for gesto in motivos:
     gesto.separo_categoria(threshold, si.conversor['s'], 'sil_corto')
    
-
+#Redefino duraciones:
+duraciones = {c:[] for c in si.categorias}
+for gesto in motivos:
+    duraciones[gesto.categoria].append(gesto.duracion)
+    
+#%% Vuelvo a plotear
+    
+salteado = False
 for k, cat in enumerate(si.categorias):
+    if cat=='seno':
+        salteado = True
+        continue
+    if salteado:
+        k -= 1
     ax = plt.subplot(3,3,k+1)
     ax.set_title('{} ({} totales)'.format(cat,len(duraciones[cat])))
     ax.hist(duraciones[cat],range = [0,0.12])
     ax.set_xlim([0,0.12])
+plt.tight_layout()
 
 
 #%% Pendientes
@@ -80,9 +96,10 @@ for k, cat in enumerate(si.categorias):
 
 categorias = si.categorias
 abecedario = [chr(c) for c in range(ord('a'),ord('z'))]
-codigo = {categorias[k]:abecedario[k] for k in range(len(categorias))}
-inv_codigo = {abecedario[k]:categorias[k] for k in range(len(categorias))}
+codigo = {cat:abc for cat, abc in zip(categorias, abecedario)}
+inv_codigo = {abc:cat for cat, abc in codigo.items()}
 
+secuencias = si.armar_secuencias(motivos, codigo)
 
 o = []
 for orden in range(4):
@@ -115,7 +132,7 @@ for orden in o:
 o1 = np.reshape(veces[0],[len(codigo),len(codigo)]).T
 
 #ejemplos (orden 2): [0,0] = aa-->a; [0,3] = aa-->d; [3,5] = ad-->f
-o2 = np.reshape(veces[1],[len(si.codigo)**2,len(codigo)]).T
+o2 = np.reshape(veces[1],[len(codigo)**2,len(codigo)]).T
 
 #ejemplos (orden 3): [0,0] = aa-->aa; [0,3] = aa-->ad; [3,5] = ad-->af
 o3 = np.reshape(veces[2],[len(codigo)**2,len(codigo)**2]).T

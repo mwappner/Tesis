@@ -85,8 +85,10 @@ def VecesQueAparece(completa, template):
 
 def armar_secuencias(motivos, codigo):
     '''Armo las secuencias de cada canto de acuerdo al código'''
+    
     nombre_actual = ''
     secuencias = []
+    sec = ''
     for gesto in motivos:
         
         if nombre_actual == gesto.archivo:
@@ -96,6 +98,7 @@ def armar_secuencias(motivos, codigo):
             #si no, guardo la secuencia e inicio una nueva
             secuencias.append(sec)
             sec = ''
+            nombre_actual = gesto.archivo
             
     return secuencias
 
