@@ -13,16 +13,14 @@ from PIL import Image
 import os
 #from skimage import filters #para otsu
 
-motivoPath = '/home/marcos/Documents/Codigos/Analisis cantos/Motivos'
+motivoPath = os.path.join(os.getcwd(),'Motivos')
 sonoPath = os.path.join(motivoPath,'Sonogramas','Nuevos')
 sonoFiles = os.listdir(sonoPath)
 sonoFiles.sort()
 
-duraciones = open(os.path.join(motivoPath,'duraciones_nuevos.txt'),'r')
-c_d = duraciones.readlines()
-duraciones.close()
-
-#ciccionario que tiene numbre_del_archivo:duracion
+with open(os.path.join(motivoPath,'duraciones_nuevos.txt'),'r') as d:
+    c_d = d.readlines()
+#diccionario que tiene numbre_del_archivo:duracion
 #duración en float y al nombre le saco el '\n' final
 dur = {k.strip():float(v) for v,k in (s.split(', ') for s in c_d)}
 
@@ -79,7 +77,7 @@ print('Duración mínima: {:.3f}'.format(np.min(list(dur.values()))))
 
 
 escala = 2500 #cantidad de pixeles del sonograma por segundo
-cual = 33 #qué figura miro
+cual = 0 #qué figura miro
 nombre_actual = sonoFiles[cual][:-4]
 
 #cargo imagen, transformo a escala de grises
