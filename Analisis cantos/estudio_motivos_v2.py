@@ -7,10 +7,10 @@ Created on Mon Sep 24 15:27:31 2018
 """
 
 import silabas as si
-import os
+import recortar as co
+import os, itertools
 import numpy as np
 import matplotlib.pyplot as plt
-import itertools
 from skimage.filters import threshold_otsu
 
 #Consigo todos los archivos
@@ -88,6 +88,35 @@ plt.tight_layout()
     #parametro de las exp.
     #parametros de cosenos
     #percu/varias
+
+#%% Recorto distitntos gestos
+
+a_cortar = ('exp', 'percu', 'seno', 'varias')
+
+#hago las carpetas
+cortadas = {}
+for tipo in a_cortar:
+    cortadas[tipo] = os.path.join('Motivos', 'Recortados', tipo)
+    os.mkdir(cortadas[tipo])
+    
+nombre_actual = ''
+os.makedirs
+for gesto in motivos:
+    
+    if gesto.nuevo: #sólo los nuevos
+        
+        if gesto.archivo != nombre_actual:
+            nombre_actual = gesto.archivo
+            file = nombre_actual.replace('Secuencias', 'Sonogramas').replace('.txt', '.jpg')
+            im = co.abro_imagen(file)
+            
+        if gesto.categoria in a_cortar:
+                
+            ic = co.cortar(im, gesto.ubicacion, gesto.duracion, *gesto.data[0:1])
+            guardar_en = os.path.join(cortadas[gesto.categoria], 
+                                      os.path.basedir(gesto.archivo).replace('.txt', '.png'))
+            co.guardar(ic, guardar_en)
+        
 
 #%% Miro secuencias
 

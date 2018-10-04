@@ -131,7 +131,7 @@ class Gesto:
         self.duracion = float(datos.pop())
         self.nuevo = nuevo
         
-        #define dónde está en el canto. sólo apra datos neuvos.
+        #define dónde está en el canto. sólo para datos neuvos.
         if nuevo:
             self.ubicacion = float(datos.pop())
         else:

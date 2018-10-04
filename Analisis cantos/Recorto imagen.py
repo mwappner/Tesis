@@ -5,7 +5,6 @@ Created on Fri Sep 28 12:06:27 2018
 @author: Marcos
 """
 
-from scipy.io import wavfile
 import numpy as np
 import matplotlib
 matplotlib.use("Qt5Agg") # This program works with Qt only
@@ -69,7 +68,9 @@ ax1.set_title(titulo)
 xla = NuevoAncho(ax1)
 #%%
 def cortar(im, ti, dur, fi, ff):
-    ic = im[int(ff*alto * 10) : int(fi*alto * 10), int(ti*escala) : int((ti+dur) * escala)]
+    if fi>ff:
+        fi, ff = ff, fi
+    ic = im[int(fi*alto * 10) : int(ff*alto * 10), int(ti*escala) : int((ti+dur) * escala)]
     return ic
 
 #ic = A[0:alto, int(0.27*escala): int((0.27 + 0.05) * escala)]
