@@ -7,16 +7,24 @@ Created on Mon Sep 24 14:48:51 2018
 """
 import os
 from orderedset import OrderedSet
-#%%
-categorias = OrderedSet(['ruido','constante','silencio','exp',
-                         'percu','seno','varias','subida'])
+#%% Parámetros generales
+
+leyenda_datos = dict(
+                 ruido=('',), 
+                 constante=('frec',), 
+                 silencio=('',), 
+                 exp=('frec_i', 'frec_f',),
+                 percu=('frec_i', 'frec_f', 'cant',), 
+                 seno=('',), 
+                 varias=('frec_i', 'frec_f', 'cant',), 
+                 subida=('ordenada', 'pendiente',),
+                 )
+
+categorias = OrderedSet(leyenda_datos.keys())
 letras = ('r', 'k','s','e','p','c','v','b')
-leyenda_datos = ((''), ('frec'), (''), ('frec_i', 'frec_f'),
-                 ('frec_i', 'frec_f', 'cant'), (''), 
-                 ('frec_i', 'frec_f', 'cant'), ('ordenada', 'pendiente'),
-                 ('ordenada', 'pendiente'))
 conversor = dict(zip(letras, categorias))
 
+#%% Funciones and stuff
 
 def corrijo_typos(datos):
     '''Corrijo toda una serie de typos que encontré. Sujeto a agregar más.'''
@@ -59,9 +67,8 @@ def procesar_archivo(file):
     #borro las líneas con 'no'
     temp = [linea for linea in temp if (not linea[-2:] == 'no' and linea)] 
     
-    #chequeo si es de los nuevos o los viejos
-    direc, _ = os.path.split(file)
-    es_nuevo = os.path.basename(direc) == 'Nuevo'
+    #chequeo si es de los nuevos o los viejos en función de en qué carpeta está
+    es_nuevo = os.path.basename(os.path.split(file)[0]) == 'Nuevos'
        
     #guardo objetos sílaba en la lista que devuelvo
     motivo = [Gesto(linea, file, nuevo=es_nuevo) for linea in temp]
@@ -118,7 +125,27 @@ def armar_secuencias(motivos, codigo):
 
 
 class Gesto:
-    '''Clase que guarda los datos de una dada sílaba.'''
+    '''Clase que guarda los datos de una dada sílaba.
+    
+    Atributos por defecto:
+        original : str
+            el string orignial que codifica el gesto
+        duracion : float
+            duración del gesto
+        ubicación : float
+            timestamp de la ubicación en el sonograma
+        nuevo : bool
+            si es gesto de la primera o segunda serie de datos analizados
+        categoria : string {'ruido','constante','silencio','exp', 'percu','seno',
+                            'varias','subida', 'bajada', 'sil_corto', ...}
+            categoría a la uqe pertenece el gesto. Pueden agregarse nuevas
+            categorías durante el programa
+        categ_orig : str {'r', 'k','s','e','p','c','v','b'}
+            categoría original como se codifica en Gesto.original
+        archivo : str (path)
+            de qué archivo está tomado originalmente el gesto (path completo)
+        data : list
+            parámetros del gesto'''
     
     def __init__(self, string, parent, nuevo=False):
         
@@ -138,7 +165,8 @@ class Gesto:
             self.ubicacion = None
         
         #cordefinir categoría, redefino las mayúsculas a minúsculas
-        self.categoria = conversor.get(datos.pop(0).lower(), None)
+        self.cat_orig = datos.pop(0).lower()
+        self.categoria = conversor.get(self.cat_orig, None)
         
         #definir de qué motivo proviene
         self.archivo = parent
@@ -150,18 +178,22 @@ class Gesto:
         '''Redefino los datos de los barridos para que sean (ordenada, pendiente)
         y los guardo así. Por default, todos los barridos son subidas. Cuando
         corresponda, defino la categoría como bajada.'''
-        
-
-        
-        if self.categoria == conversor['b']:
+                
+        if self.cat_orig == 'b':
             
             pendiente = (self.data[1] - self.data[0]) / self.duracion
             
+            #por default son subidas, pongo 'bajda' cuando corresponde
             if pendiente<0:
                 
+                #agrego bajada a la lista de categorias
                 nueva_cat = 'bajada'
                 global categorias
                 categorias.add(nueva_cat)
+                
+                #agrego los parámetros de bajada
+                global leyenda_datos
+                leyenda_datos[nueva_cat] = leyenda_datos[self.categoria]
         
                 self.categoria = nueva_cat #bajada
              
@@ -175,6 +207,11 @@ class Gesto:
             if self.duracion < threshold:
                 self.categoria = nueva_cat
                 
+                #agrego la nueva categoría a la lista
                 global categorias
                 categorias.add(nueva_cat)
+                
+                #agrego los pàrámetros de datos correspondientes
+                global leyenda_datos
+                leyenda_datos[nueva_cat] = leyenda_datos[categoria]
             

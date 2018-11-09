@@ -8,7 +8,7 @@ Created on Mon Sep 24 15:27:31 2018
 
 import silabas as si
 import recortar as co
-import os, itertools
+import os, itertools, shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.filters import threshold_otsu
@@ -91,30 +91,32 @@ plt.tight_layout()
 
 #%% Recorto distitntos gestos
 
-a_cortar = ('exp', 'percu', 'seno', 'varias')
+a_cortar = ('exp', 'percu', 'varias') #faltan senos
 
 #hago las carpetas
-cortadas = {}
-for tipo in a_cortar:
-    cortadas[tipo] = os.path.join('Motivos', 'Recortados', tipo)
-    os.mkdir(cortadas[tipo])
+cortadas = {tipo:os.path.join('Motivos', 'Recortados', tipo) for tipo in a_cortar}
+for carpeta in cortadas.values():
+    shutil.rmtree(carpeta, ignore_errors=True)
+    os.makedirs(carpeta)
     
 nombre_actual = ''
-os.makedirs
+
 for gesto in motivos:
     
     if gesto.nuevo: #sólo los nuevos
         
+        #abro la imagen correspondiente a un sonograma (una sola vez)
         if gesto.archivo != nombre_actual:
             nombre_actual = gesto.archivo
-            file = nombre_actual.replace('Secuencias', 'Sonogramas').replace('.txt', '.jpg')
+            #el sonograma original:
+            file = nombre_actual.replace('Secuencias', 'Sonogramas').replace('.txt', '.png')
             im = co.abro_imagen(file)
             
         if gesto.categoria in a_cortar:
                 
-            ic = co.cortar(im, gesto.ubicacion, gesto.duracion, *gesto.data[0:1])
+            ic = co.cortar(im, gesto.ubicacion, gesto.duracion, *gesto.data[:2])
             guardar_en = os.path.join(cortadas[gesto.categoria], 
-                                      os.path.basedir(gesto.archivo).replace('.txt', '.png'))
+                                      os.path.basename(gesto.archivo).replace('.txt', ''))
             co.guardar(ic, guardar_en)
         
 
