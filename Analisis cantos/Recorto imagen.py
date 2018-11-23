@@ -66,13 +66,38 @@ ax1.imshow(A,cmap='Greys',extent=[0, dur[nombre_actual],0, 0.1])
 titulo = '{}: {}, duración:{:.1f}s'.format(cual,nombre_actual,dur[nombre_actual])
 ax1.set_title(titulo)
 xla = NuevoAncho(ax1)
+
+#%%
+
+# Agrego una línea negra
+A[1200:1210, 700:800] = 255
+
+
 #%%
 def cortar(im, ti, dur, fi, ff):
+    #reordeno fi y ff, si es necesario
     if fi>ff:
         fi, ff = ff, fi
+    #recorto:
+    #el *10 es por la escala de la frecuencia: el eje y mide 0.1 (sin unidades)
     ic = im[int(fi*alto * 10) : int(ff*alto * 10), int(ti*escala) : int((ti+dur) * escala)]
     return ic
 
+def marcar(im, ti, dur, fi, ff):
+    #reordeno fi y ff, si es necesario
+    if fi>ff:
+        fi, ff = ff, fi
+    #recorto:
+    im_out = im.copy()
+    im_out[int((.1-fi)*alto * 10) : int((.1-ff)*alto * 10), int(ti*escala) : int((ti+dur) * escala)] = 0
+    return im_out
+
+#%%
+
 #ic = A[0:alto, int(0.27*escala): int((0.27 + 0.05) * escala)]
-ic = cortar(A, 0.08, 0.09, 0.055, 0.031)
-pl.imshow(ic)
+esta_dur = 0.06
+ic = cortar(A, 0.27, esta_dur, 0.03, 0.02)
+pl.imshow(ic, extent=[0, esta_dur, 0, 0.1])
+
+im = marcar(A, 0.27, esta_dur, 0.03, 0.02)
+pl.imshow(im, cmap='Greys',extent=[0, dur[nombre_actual],0, 0.1])
