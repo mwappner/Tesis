@@ -1,0 +1,510 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"jwt",
+				"jwt_required"
+			],
+			[
+				"nomb",
+				"nombre_base"
+			],
+			[
+				"_tim",
+				"_timestart_cam"
+			],
+			[
+				"ex",
+				"_existentes"
+			],
+			[
+				"run",
+				"run_new"
+			],
+			[
+				"try",
+				"try\tTry/Except"
+			],
+			[
+				"du",
+				"duration"
+			],
+			[
+				"tim",
+				"_timestart"
+			],
+			[
+				"save",
+				"save_dir"
+			],
+			[
+				"file",
+				"file_path"
+			],
+			[
+				"is",
+				"isfile"
+			],
+			[
+				"nombr",
+				"nombre_modelo"
+			],
+			[
+				"fre",
+				"frec_f"
+			],
+			[
+				"freq",
+				"freq_end"
+			],
+			[
+				"che",
+				"chequear_rango"
+			],
+			[
+				"frec",
+				"frec_i"
+			],
+			[
+				"int",
+				"int"
+			],
+			[
+				"pro",
+				"proc_running"
+			],
+			[
+				"lo",
+				"load_model"
+			],
+			[
+				"r",
+				"route"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/__init__.py",
+			"settings":
+			{
+				"buffer_size": 10069,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/setup.py",
+			"settings":
+			{
+				"buffer_size": 1005,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/device.py",
+			"settings":
+			{
+				"buffer_size": 6993,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/TODO.txt",
+			"settings":
+			{
+				"buffer_size": 129,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/utils.py",
+			"settings":
+			{
+				"buffer_size": 2127,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 119.0,
+		"history":
+		[
+			"raise FileNotFoundError('hola')",
+			"FileNotFoundError('hola')",
+			"FileNotFoundError",
+			"from flask import FileNotFoundError",
+			"os.path.basename(p1)",
+			"os.path.basename(p2)",
+			"os.path.basename(p3)",
+			"p3 = 'el/archivo.algo'",
+			"p2",
+			"p2 = p1 + '/'",
+			"p1 = 'el/path/dado'",
+			"import os",
+			"for v in d.values(): v.append(1)",
+			"for v in d.values():",
+			"d = dict(uno=[], dos=[])"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Y/Documents/Codigos/byc"
+	],
+	"file_history":
+	[
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/run.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/physical_chingolo_muchos_marcos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/utils.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/grid.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/Benteveos_Chingolos_regularizada_gris_muy_achicada.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/physical_benteveo_muchos_marcos.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/__init__.py",
+		"/Y/Documents/Codigos/byc/utils.py",
+		"/Y/Documents/Codigos/byc/leo_filtros.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/device.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/app.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/.gitignore",
+		"/Y/Documents/Codigos/byc/saco_sintetizados_defectuosos.py",
+		"/Y/Documents/Codigos/byc/correr.py",
+		"/Y/Documents/Codigos/byc/physical_chingolo_muchos_marcos.py",
+		"/Y/Documents/Codigos/byc/physical_benteveo_muchos_marcos.py",
+		"/Y/Documents/Codigos/byc/physical_chingolo_muchos.py",
+		"/Y/Documents/Codigos/byc/physical_benteveo_muchos.py",
+		"/C/Users/Marcos/Downloads/physical_benteveo_muchos (1).py",
+		"/Y/Documents/Codigos/byc/veo_activacion.py",
+		"/Y/Documents/Codigos/byc/Benteveos_Chingolos_regularizada_gris_muy_achicada.py",
+		"/Y/Documents/Codigos/byc/leo_un_filtro.py",
+		"/Y/Documents/Codigos/Probando codigos/veo_filtros.py",
+		"/Y/Documents/Codigos/Probando codigos/leo_un_filtro.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/Tesis/Analisis cantos/cantos_repetidos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/Tesis/Analisis cantos/estudio_motivos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/physical_chingolo_muchos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/physical_benteveo_muchos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/correr.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/barrido.sh",
+		"/C/Users/Marcos/Downloads/physical_benteveo_muchos.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/algo2.py",
+		"/C/Users/Marcos/Documents/Facu/Tesis/byc/algo.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/utils.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/fwp_utils.py",
+		"/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/setup.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/SLoop.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/SPID.py",
+		"/C/Users/Marcos/Downloads/ThreeNews.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/fwp_pid.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/MoniViejoPWM.py",
+		"/C/Users/Marcos/Documents/Facu/IyC/DAQ/fwp_wavemaker.py",
+		"/C/Users/Marcos/Documents/GitHub/GrupoFWP/pyaudiowave.py",
+		"/C/Users/Marcos/Documents/GitHub/GrupoFWP/fwp_pyaudio.py"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"HEAD",
+			"_timestart",
+			"sound_running",
+			"proc_running",
+			"sound_running",
+			"rangos"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"proc_running",
+			"sound_running",
+			"proc_running"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/__init__.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10069,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								649,
+								631
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/setup.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1005,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								324,
+								324
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/device.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6993,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								704,
+								706
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1278.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/TODO.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 129,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								129,
+								129
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/Marcos/Documents/Facu/Labs remotos/lvdf/lvdf/utils.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1143,
+								1143
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "tesis.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 592.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 229.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
