@@ -5,7 +5,9 @@
 *.png
 *.zip
 *.eps
+*.jpeg
 Borradores/
+byc/sintetizados/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

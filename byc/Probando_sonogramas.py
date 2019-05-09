@@ -35,13 +35,24 @@ def bitificar8(im,desv=1, ceros=True):
     im = np.clip(im, 0, 255).astype('uint8') #corta todo por fuera de la escala
     return im
 
-def normalizar(im):
+def normalizar(im, bits=True):
     im -= im.min()
-    im /= im.max() #por si tengo cero
+    im /= im.max() + 1e-10 #por si tengo cero
+    if not bits:
+        return im
     im *= 255
     return im.astype('uint8')
 
 thresholdear = lambda im: np.where(im>filters.threshold_otsu(im), im, 0)
+
+def rango_dinamico(valor, imagen, bits=True):
+    '''Escala la imagen de forma que todos los valores que estén un porcentaje 
+    <valor> debajo del máximo pasan a cero y el máximo pasa a ser 255.'''
+    if not 0<=valor<=1:
+        raise ValueError('valor debe ser entre 0 y 1')
+    imagen = normalizar(imagen, bits=False) #valores ahora en [0,1]
+    imagen[imagen<valor] = valor
+    return normalizar(imagen, bits)
 
 def mispec(sonido, fs, dur_seg=0.012, overlap=.9, sigma=.25):
     '''Calcula un sonograma con ventana gaussiana. Overlap y sigma son 
@@ -75,7 +86,7 @@ def plotear(im, ax=None, log=False):
     if ax is None:
         fig, ax = plt.subplots()
     if log:
-        im= np.log10(im)
+        im = np.log10(im)
     ax.pcolormesh(t, f/1000, im,rasterized=True, cmap=plt.get_cmap('Greys'))
 #    ax.ticklabel_format(axis='y', style='sci')
 #    ax.set_xlabel('tiempo[s]')
