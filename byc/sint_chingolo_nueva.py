@@ -98,6 +98,7 @@ def senito(ti, tf, media, amplitud, alphai, alphaf, f, freqs, beta, amps):
     beta[i:j] = .5
     amps[i:j] = f * np.sin(np.pi * k)
 
+#%%
 #reinicio valores
 for _ in range(cant_sintesis):
     
@@ -140,10 +141,20 @@ for _ in range(cant_sintesis):
     
     medio1=0.745
     medio2=0.778
-    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
-         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
+#    #opción 1:
+#    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
+#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
+#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#    #opción 2:
+#    senito(ti=0.633, tf=medio1, media=18400, amplitud=-15500, alphai=1.51, alphaf=1.09,
+#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
+#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    #opcion 3:
+    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
            f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    
     expo(ti=medio2, tf=0.961, wi=4677, wf=2170, tau=0.8,
          f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     
@@ -196,10 +207,12 @@ for _ in range(cant_sintesis):
     sonido *= 1000
     sonido += 20*normal(0, .007, cant_puntos)
     
-    f, t, Sxx = signal.spectrogram(sonido,fsamp,window=('gaussian',20*128),nperseg=10*1024,noverlap=18*512,scaling='spectrum')
+    f, t, Sxx = signal.spectrogram(sonido,fsamp,window=('gaussian',20*128),
+                                   nperseg=10*1024,noverlap=18*512,scaling='spectrum')
     fig, ax = plt.subplots()
-    ax.pcolormesh(t,f,np.log10(Sxx),rasterized=True,cmap=plt.get_cmap('Greys'))
-    ax.set_ylim(10,18000)
+    ax.pcolormesh(t,f,np.log10(Sxx),rasterized=True,
+                  cmap=plt.get_cmap('Greys'))
+    ax.set_ylim(10,15000)
     ax.axis('off')
     fig.subplots_adjust(bottom = 0, top = 1, left = 0, right = 1) #para que no tenga bordes blancos
     
@@ -207,7 +220,7 @@ for _ in range(cant_sintesis):
     fig.savefig(nombre, dpi=100)
     plt.close()
     
-    scaled = np.int16(sonido/np.max(np.abs(sonido)) * 32767)
+    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
     write(nombre, int(fsamp), scaled)
     

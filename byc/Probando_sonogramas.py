@@ -68,8 +68,8 @@ def mispec(sonido, fs, dur_seg=0.012, overlap=.9, sigma=.25):
                        noverlap=int(nperseg*overlap),
                        scaling='spectrum')
 #%%
-sinte_ubi = os.path.join('limpiando', 'audios') # directorio de los sintetizados
-ori_ubi = os.path.join('limpiando', 'originales') # directorio de los originales
+sinte_ubi = os.path.join('nuevos', 'audios') # directorio de los sintetizados
+ori_ubi = os.path.join('nuevos', 'originales') # directorio de los originales
 sinte = archivos(sinte_ubi)
 ori = archivos(ori_ubi)
 
@@ -147,3 +147,5 @@ medias = [mascarear(val).mean() for val in k]
 
 plt.plot(k, medias/max(medias))
 plt.plot(k[1:-1], np.diff(medias, 2))
+
+#%%

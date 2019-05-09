@@ -103,6 +103,7 @@ def senito(ti, tf, media, amplitud, alphai, alphaf, f, freqs, beta, amps):
     amps[i:j]= f * np.sin(np.pi * k/(j-i))
 #    amps[i:j] = f
 
+#%%
 for i in range(cant_sintesis):
     
     #reinicio valores
@@ -128,13 +129,13 @@ for i in range(cant_sintesis):
 #    senito(0.58,0.7,1305*0.5,600*0.5,-np.pi/4.0,3*np.pi/2.0,0.7*1,frecuencias,beta,amplitudes)
 #    senito(0.74+0.05,1.06,1301,200,0,np.pi+np.pi/4.0,0.7*1,frecuencias,beta,amplitudes)
 #
-#    tiempo = np.linspace(0, tiempo_total, cant_puntos)
-#    plt.subplot(311)
-#    plt.plot(tiempo[::10],frecuencias[::10], '.')
-#    plt.subplot(312)
-#    plt.plot(tiempo[::10],amplitudes[::10], '.')
-#    plt.subplot(313)
-#    plt.plot(tiempo[::10],beta[::10], '.')
+    tiempo = np.linspace(0, tiempo_total, cant_puntos)
+    plt.subplot(311)
+    plt.plot(tiempo[::10],frecuencias[::10], '.')
+    plt.subplot(312)
+    plt.plot(tiempo[::10],amplitudes[::10], '.')
+    plt.subplot(313)
+    plt.plot(tiempo[::10],beta[::10], '.')
 ##    
 # -------
 # Integro
@@ -146,7 +147,7 @@ for i in range(cant_sintesis):
     
     print('integrando...')
     
-    kappa_todos = (6.56867694e-08 * frecuencias*frecuencias + 4.23116382e-05 * frecuencias + 2.67280260e-02) * normal(1,0.2,cant_puntos)
+    kappa_todos = (6.56867694e-08 * frecuencias*frecuencias + 4.23116382e-05 * frecuencias + 2.67280260e-02)
     b_todos = beta * normal(1, .1, cant_puntos)
     
     for kappa, b in zip(kappa_todos, b_todos):
@@ -174,14 +175,15 @@ for i in range(cant_sintesis):
                                    nperseg=10*1024, noverlap=18*512, scaling='spectrum')
     
     fig, ax = plt.subplots()
-    ax.pcolormesh(t,f,np.log10(Sxx),rasterized=True,cmap=plt.get_cmap('Greys'))
+    ax.pcolormesh(t,f,np.log10(Sxx),rasterized=True,
+                  cmap=plt.get_cmap('Greys'))
     ax.set_ylim(10,15000)
     ax.axis('off')
     fig.subplots_adjust(bottom = 0, top = 1, left = 0, right = 1) #para que no tenga bordes blancos
     
     nombre = creo_nombre(path_sono, nombre_base, '.jpg')
-#    fig.savefig(nombre, dpi=100)
-#    plt.close()
+    fig.savefig(nombre, dpi=100)
+    plt.close()
     
     scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
