@@ -68,17 +68,28 @@ def rk4(dv, v, dt, kappa, b):
     return v
 
 
-def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3):
+def forma_amps(inicio, fin):
+    if inicio and fin:
+        return lambda t: np.sin(np.pi * t)
+    if inicio and not fin:
+        return lambda t: np.sin(np.pi * t / 2)
+    if not inicio and fin:
+        return lambda t: np.sin((np.pi * (t+1) / 2))
+    else: 
+        return lambda t: 1                    
+            
+def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3, inicio=True, fin=True):
     
     i=np.int(ti/dt)
     j=np.int(tf/dt)
-    k = np.arange(j-i) / (j-i) # =  t - ti / (ti - tf)
+    k = np.arange(j-i) / (j-i) # =  t - ti / (tf - ti)
 
     freqs[i:j] = wf + (wi-wf) * np.exp(-tau * k)
-    beta[i:j] = 1
-    amps[i:j] = f * np.sin(np.pi * k)
+    beta[i:j] = .5
+    amps[i:j] = f * forma_amps(inicio, fin)(k)
+#    amps[i:j] = f
 
-def rectas(ti, tf, wi, wf, f, freqs, beta, amps):
+def rectas(ti, tf, wi, wf, f, freqs, beta, amps, inicio=True, fin=True):
     
     i=np.int(ti/dt)
     j=np.int(tf/dt)
@@ -86,17 +97,42 @@ def rectas(ti, tf, wi, wf, f, freqs, beta, amps):
 
     freqs[i:j] = wi + (wf-wi) * k
     beta[i:j] = .5
-    amps[i:j] = f * np.sin(np.pi * k)
+    amps[i:j] = f * forma_amps(inicio, fin)(k)
 
-def senito(ti, tf, media, amplitud, alphai, alphaf, f, freqs, beta, amps):
+def senito(ti, tf, media, amplitud, alphai, alphaf,
+           f, freqs, beta, amps, param=1, d=0, inicio=True, fin=True):
+    '''Param=1 corresponde a la aprametrización usual con (ti, tf, media, amplitud
+    alphai, alphaf), mientras que param=2 corresponde a una parametrización que 
+    deriva de lo anterior y que comienza en t<ti, por lo que pide d para armar un
+    ti_nuevo = ti-d.'''
     
+    if param not in (1,2):
+        raise ValueError("parametrizacion debe ser 1 o 2")
+
     i=np.int(ti/dt)
     j=np.int(tf/dt)
-    k = np.arange(j-i) / (j-i) # =  t - ti / (ti - tf)
+    dj = j-i
+#    k = np.arange(j-i)/j-i
+    k = np.arange(0,1,1/dj)
+    amps[i:j]= f * forma_amps(inicio, fin)(k)
     
-    freqs[i:j] = media + amplitud * np.sin(alphai + (alphaf - alphai) * k)
-    beta[i:j] = .5
-    amps[i:j] = f * np.sin(np.pi * k)
+    if param==1:
+        freqs[i:j] = media + amplitud * np.sin(alphai + (alphaf - alphai) * k)
+        beta[i:j] = .5
+    else:
+        l = int(d/dt)
+        i2= i-l   
+#        k = np.arange(-l/dj,1,1/dj)
+#        k = np.linspace(i2, j, j-i2)
+        k = np.arange(i2, j)
+        
+        phi = (alphai * j - alphaf * i) / dj
+        omega = (alphaf - alphai) / dj
+        freqs[i2:j] = media + amplitud * np.sin(phi + omega * k )
+        beta[i2:j] = .5
+#    new_k = 5* k / (j-i) # = k/tau
+#    amps[i:j] = f * new_k * np.exp(-new_k) * normal(1, .1) * (1 + .4 * np.sin(2*np.pi * k / 6820))
+#    amps[i:j] = f
 
 #%%
 #reinicio valores
@@ -142,21 +178,21 @@ for _ in range(cant_sintesis):
     medio1=0.745
     medio2=0.778
 #    #opción 1:
-#    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
-#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-#    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
-#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
+         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
+    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
+           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False, fin=False)
 #    #opción 2:
 #    senito(ti=0.633, tf=medio1, media=18400, amplitud=-15500, alphai=1.51, alphaf=1.09,
-#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
 #    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
-#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False, fin=False)
     #opcion 3:
-    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
-           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
+#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
     
     expo(ti=medio2, tf=0.961, wi=4677, wf=2170, tau=0.8,
-         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
     
     deltat, t0, t1 = 0.0028, 1.044, 1.102
     paso = deltat + t1 - t0
@@ -166,14 +202,12 @@ for _ in range(cant_sintesis):
         expo(t0 + paso*k, t1 + paso*k, 6945, 3700, tau=3,
              f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     
-#    tiempo = np.linspace(0, tiempo_total, cant_puntos)
-#    plt.subplot(311)
-#    plt.plot(tiempo[::10],frecuencias[::10], '.')
-#    plt.subplot(312)
-#    plt.plot(tiempo[::10],amplitudes[::10], '.')
-#    plt.subplot(313)
-#    plt.plot(tiempo[::10],beta[::10], '.')
-#    
+    tiempo = np.linspace(0, tiempo_total, cant_puntos)
+    fig1, axs= plt.subplots(3,1, sharex=True)
+    axs[0].plot(tiempo[::10],frecuencias[::10], '.')
+    axs[1].plot(tiempo[::10],amplitudes[::10], '.')
+    axs[2].plot(tiempo[::10],beta[::10], '.')
+#%%
     # -------
     # Integro
     # -------
