@@ -119,10 +119,12 @@ for i in range(cant_sintesis):
     f = 0.35
     senito(ti=0.184, tf=0.33, media=1750, amplitud=70, alphai=2.4, alphaf=0.7,
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes)
+    
     senito(ti=0.59, tf=0.64, media=-870, amplitud=2960, alphai=2.35, alphaf=1.34,
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes)
     expo(ti=0.64, tf=0.69, wi=2010, wf=160, tau=0.68,
          f=f, freqs=frecuencias, beta=beta, amps=amplitudes)
+    
     senito(ti=0.737, tf=1.054, media=1290, amplitud=570, alphai=9.7, alphaf=6,
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes)
 #    senito(0.166,0.32+0.05,1310*0.5,200*0.5,0,np.pi,0.7*1.1,frecuencias,beta,amplitudes)
@@ -182,12 +184,12 @@ for i in range(cant_sintesis):
     fig.subplots_adjust(bottom = 0, top = 1, left = 0, right = 1) #para que no tenga bordes blancos
     
     nombre = creo_nombre(path_sono, nombre_base, '.jpg')
-    fig.savefig(nombre, dpi=100)
-    plt.close()
+#    fig.savefig(nombre, dpi=100)
+#    plt.close()
     
     scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
-    write(nombre, int(fsamp), scaled)
+#    write(nombre, int(fsamp), scaled)
     
     
     print('listo {} de {}!'.format(i+1, cant_sintesis))

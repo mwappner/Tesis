@@ -141,19 +141,19 @@ for _ in range(cant_sintesis):
     
     medio1=0.745
     medio2=0.778
-#    #opción 1:
-#    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
-#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-#    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
-#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    #opción 1:
+    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
+         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
+           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
 #    #opción 2:
 #    senito(ti=0.633, tf=medio1, media=18400, amplitud=-15500, alphai=1.51, alphaf=1.09,
 #         f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
 #    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
 #           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     #opcion 3:
-    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
-           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+#    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
+#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     
     expo(ti=medio2, tf=0.961, wi=4677, wf=2170, tau=0.8,
          f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
