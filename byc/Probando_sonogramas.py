@@ -47,7 +47,8 @@ thresholdear = lambda im: np.where(im>filters.threshold_otsu(im), im, 0)
 
 def rango_dinamico(valor, imagen, bits=True):
     '''Escala la imagen de forma que todos los valores que estén un porcentaje 
-    <valor> debajo del máximo pasan a cero y el máximo pasa a ser 255.'''
+    <valor> debajo del máximo pasan a cero y el máximo pasa a ser 1 o 255,
+    dependiendo de si bits=True o False, respecivamente.'''
     if not 0<=valor<=1:
         raise ValueError('valor debe ser entre 0 y 1')
     imagen = normalizar(imagen, bits=False) #valores ahora en [0,1]
@@ -74,7 +75,7 @@ sinte = archivos(sinte_ubi)
 ori = archivos(ori_ubi)
 
 #calculo sonograma
-fs, sonido = wavfile.read(sinte[1])
+fs, sonido = wavfile.read(ori[0])
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
 
 #elimino valores correspondientes a frecuencias muy altas
@@ -107,15 +108,15 @@ def plotear(im, ax=None, log=False):
 
 ######con log
 log = False #para el plot
-s = bitificar8(np.log10(Sxx))
+s = bitificar8(np.log10(Sxx + 1e-6))
 so = thresholdear(s)
 soo = bitificar8(so.astype('float'), desv=2, ceros=False)
 
-n = normalizar(np.log10(Sxx))
+n = normalizar(np.log10(Sxx + 1e-6))
 no = thresholdear(n)
 noo = bitificar8(no.astype('float'), desv=2, ceros=False)
 
-sf = normalizar(np.log10(gaussian_filter(Sxx, sigma=1)))
+sf = normalizar(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1)))
 sfo = thresholdear(sf) # para s da 150; s.mean() = 155
 sfoo = bitificar8(sfo.astype('float'), desv=2, ceros=False)
 
@@ -148,4 +149,15 @@ medias = [mascarear(val).mean() for val in k]
 plt.plot(k, medias/max(medias))
 plt.plot(k[1:-1], np.diff(medias, 2))
 
-#%%
+#%% Rango dinámico
+
+fs, sonido = wavfile.read(sinte[4])
+fs, sonido = wavfile.read(ori[2])
+f, t, Sxx = mispec(sonido, fs, sigma=.15)
+
+#elimino valores correspondientes a frecuencias muy altas
+lims = 10, 15000
+Sxx = Sxx[np.logical_and(f>lims[0], f<lims[1]), :]
+f = f[np.logical_and(f>lims[0], f<lims[1])]
+
+plotear(rango_dinamico(0.55, np.log10(Sxx + 1e-6)))
