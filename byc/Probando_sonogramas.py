@@ -75,14 +75,15 @@ sinte = archivos(sinte_ubi)
 ori = archivos(ori_ubi)
 
 for i, f in enumerate(ori):
-    print('ori {}: {}'.format(i,f))
+    if f.endswith('.wav'):
+        print('ori {}: {}'.format(i,f))
 print('')
 for i, f in enumerate(sinte):
-    print('sinte {}: {}'.format(i,f))
+    if f.endswith('.wav'):
+        print('sinte {}: {}'.format(i,f))
 #%%
-    
 #calculo sonograma
-file = ori[3]
+file = ori[10]
 fs, sonido = wavfile.read(file)
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
 

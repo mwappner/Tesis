@@ -89,15 +89,25 @@ def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3, inicio=True, fin=True):
     amps[i:j] = f * forma_amps(inicio, fin)(k)
 #    amps[i:j] = f
 
-def rectas(ti, tf, wi, wf, f, freqs, beta, amps, inicio=True, fin=True):
+def rectas(ti, tf, wi, wf, f, freqs, beta, amps, 
+            param=1, d=0, inicio=True, fin=True):
     
+    if param not in (1,2):
+        raise ValueError("parametrizacion debe ser 1 o 2")
+        
     i=np.int(ti/dt)
     j=np.int(tf/dt)
-    k = np.arange(j-i) / (j-i) # =  t - ti / (ti - tf)
+    dj = j-i
+    k = np.arange(dj) / dj # =  t - ti / (ti - tf)
+    amps[i:j] = f * forma_amps(inicio, fin)(k)
 
+    if param ==2:
+        l = int(d/dt)
+        i -= l  
+        k = np.arange(i2, j) / dj
+        
     freqs[i:j] = wi + (wf-wi) * k
     beta[i:j] = .5
-    amps[i:j] = f * forma_amps(inicio, fin)(k)
 
 def senito(ti, tf, media, amplitud, alphai, alphaf,
            f, freqs, beta, amps, param=1, d=0, inicio=True, fin=True):
