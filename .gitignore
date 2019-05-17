@@ -1,13 +1,13 @@
 # Personalized
-*.wav
+#*.wav
 *.pdf
-*.jpg
-*.png
+#*.jpg
+#*.png
 *.zip
 *.eps
 *.jpeg
 Borradores/
-byc/sintetizados/
+byc/sintetizados/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
