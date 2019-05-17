@@ -1,0 +1,102 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="Eligiendo chingolo_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="2.2555965812" vpos="0" h="0.0000000000" zoom="759.0009730782" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="GENRE" value="Passerellidae"/>
+		<tag name="ARTIST" value="Rosendo Manuel Fraga"/>
+		<tag name="TITLE" value="Rufous-collared Sparrow (Zonotrichia capensis)"/>
+		<tag name="ALBUM" value="xeno-canto"/>
+		<tag name="Content group description" value="yyjrms"/>
+		<tag name="COMMENTS" value="XC472342 Â© Rosendo Manuel Fraga // Check point on the main paved road, Sierra de Lema, BolÃ­var, 5.58, -61.2 (5.9992, -61.4136), Venezuela // 1200m // 17:00h, 2007-05-23 // male, song // Songs of a male sparrow in a clearing. /  / bird-seen:yes /  / playback-used:no"/>
+	</tags>
+	<wavetrack name="XC375251 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="137" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="84017">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000110.au" len="84017" min="-0.769274" max="0.772075" rms="0.120127"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC423497 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="88433">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000c6a.au" len="88433" min="-0.415611" max="0.399619" rms="0.072452"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC423498 - Rufous-collared Sparrow - Zonotrichia capensis" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="78090">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000ff8.au" len="78090" min="-0.474688" max="0.488315" rms="0.073602"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC430840 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="43810">
+				<waveblock start="0">
+					<simpleblockfile filename="e00009d7.au" len="43810" min="-0.294769" max="0.295406" rms="0.045072"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC436611 - Rufous-collared Sparrow - Zonotrichia capensis" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="48000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="82845">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000371.au" len="82845" min="-0.221082" max="0.21631" rms="0.032609"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC462515 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="36547">
+				<waveblock start="0">
+					<simpleblockfile filename="e00006ed.au" len="36547" min="-0.059349" max="0.064411" rms="0.010021"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC463952 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="22050" gain="1.0" pan="0.0">
+		<waveclip offset="-0.01057091">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="35675">
+				<waveblock start="0">
+					<simpleblockfile filename="e000075f.au" len="35675" min="-0.151098" max="0.142502" rms="0.027228"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="XC472342 - Rufous-collared Sparrow - Zonotrichia capensis" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="16000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="36090">
+				<waveblock start="0">
+					<simpleblockfile filename="e000053d.au" len="36090" min="-0.06938" max="0.061544" rms="0.006623"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="chingolo" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="-0.02770975">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="89655">
+				<waveblock start="0">
+					<simpleblockfile filename="e00001b4.au" len="89655" min="-0.433746" max="0.437164" rms="0.085044"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
