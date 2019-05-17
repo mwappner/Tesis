@@ -74,9 +74,18 @@ ori_ubi = os.path.join('nuevos', 'originales') # directorio de los originales
 sinte = archivos(sinte_ubi)
 ori = archivos(ori_ubi)
 
+for i, f in enumerate(ori):
+    print('ori {}: {}'.format(i,f))
+print('')
+for i, f in enumerate(sinte):
+    print('sinte {}: {}'.format(i,f))
+#%%
+    
 #calculo sonograma
-fs, sonido = wavfile.read(ori[0])
+file = ori[3]
+fs, sonido = wavfile.read(file)
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
+
 
 #elimino valores correspondientes a frecuencias muy altas
 lims = 10, 15000
@@ -120,20 +129,28 @@ sf = normalizar(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1)))
 sfo = thresholdear(sf) # para s da 150; s.mean() = 155
 sfoo = bitificar8(sfo.astype('float'), desv=2, ceros=False)
 
+sfr = rango_dinamico(.6,(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1))))
+sfor = thresholdear(sfr) # para s da 150; s.mean() = 155
+sfoor = bitificar8(sfor.astype('float'), desv=2, ceros=False)
 
 fig, axarr = plt.subplots(3,3, sharex=True, sharey=True)
 fig.set_size_inches([9.07, 5.98])
-ims = (n, no, noo, s, so, soo, sf, sfo, sfoo)
+fig.set_size_inches([15.84,  7.54])
+ims = (n, no, noo, 
+#       s, so, soo,
+       sf, sfo, sfoo, 
+       sfr, sfor, sfoor)
 titulos = ('normalizar', 'normalizar otsu', 'normalizar otsu contraste',
-           'bitificar',  'bitificar otsu', 'bitificar otsu contraste', 
-           'gauss_filt', 'gauss_filt otsu', 'gauss_filt otsu contraste')
+#           'bitificar',  'bitificar otsu', 'bitificar otsu contraste', 
+           'gauss_filt_rd0.5', 'gauss_filt otsu', 'gauss_filt otsu contraste',
+           'gauss_filt_rd0.5', 'gauss_filt_rd0.5 otsu', 'gauss_filt_rd0.5 otsu contraste')
 for im, ti, ax in zip(ims, titulos, axarr.flatten()):
     plotear(im, ax, log=log)
     ax.set_title(ti)
 
 axarr[1,0].set_ylabel('frecuencia [kHz]')
-axarr[2,1].set_xlabel('tiempo [s]')
-
+axarr[-1,1].set_xlabel('tiempo [s]')
+fig.suptitle(file, fontsize=15)
 #%% Pruebo con media por fila
 
 c = 1.15
@@ -151,8 +168,8 @@ plt.plot(k[1:-1], np.diff(medias, 2))
 
 #%% Rango dinámico
 
-fs, sonido = wavfile.read(sinte[4])
-fs, sonido = wavfile.read(ori[2])
+#fs, sonido = wavfile.read(sinte[4])
+fs, sonido = wavfile.read(ori[3])
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
 
 #elimino valores correspondientes a frecuencias muy altas
@@ -160,4 +177,4 @@ lims = 10, 15000
 Sxx = Sxx[np.logical_and(f>lims[0], f<lims[1]), :]
 f = f[np.logical_and(f>lims[0], f<lims[1])]
 
-plotear(rango_dinamico(0.55, np.log10(Sxx + 1e-6)))
+plotear(rango_dinamico(0.6, np.log10(Sxx + 1e-6)))

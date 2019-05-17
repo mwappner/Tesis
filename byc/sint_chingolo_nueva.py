@@ -170,39 +170,24 @@ for _ in range(cant_sintesis):
 #    senito(1.87+tiempin,1.92+tiempin,fmax,2740,np.pi,3*np.pi/2.0,.6,frecuencias,beta,amplitudes)
     
     
-    rectas(ti=0.0457, tf=0.2975, wi=4568, wf=4325, 
+    rectas(ti=0.086, tf=0.168, wi=4560, wf=4811, 
            f=0.15, freqs=frecuencias, beta=beta, amps=amplitudes)
-    rectas(ti=0.2975, tf=0.581, wi=4757, wf=4757, 
+    
+    expo(ti=0.315, tf=0.569, wi=4260, wf=4030, tau=-1.5,
            f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     
-    medio1=0.745
-    medio2=0.778
-
-#    #opción 1:
-    expo(ti=0.633, tf=medio1, wi=2947, wf=1250, tau=-0.7,
+    medio=0.729
+    rectas(ti=0.677, tf=medio, wi=6030, wf=5730,
          f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
-    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
-           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False, fin=False)
-
-#    #opción 2:
-#    senito(ti=0.633, tf=medio1, media=18400, amplitud=-15500, alphai=1.51, alphaf=1.09,
-#         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
-#    senito(ti=medio1, tf=medio2, media=-930, amplitud=5800 ,alphai=1.83, alphaf=1.31,
-#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False, fin=False)
-    #opcion 3:
-#    senito(ti=0.633, tf=medio2, media=3900, amplitud=-970, alphai=1.8, alphaf=5.3,
-
-#           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
+    expo(ti=medio, tf=0.961, wi=5736, wf=1370, tau=0.8,
+           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
     
-    expo(ti=medio2, tf=0.961, wi=4677, wf=2170, tau=0.8,
-         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
-    
-    deltat, t0, t1 = 0.0028, 1.044, 1.102
+    deltat, t0, t1 = 0.0028, 1.08, 1.124
     paso = deltat + t1 - t0
-    for k in range(13):
+    for k in range(7):
 #        rectas(t0 + paso*k, t1 + paso*k, 6945, 3839,
 #               f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-        expo(t0 + paso*k, t1 + paso*k, 6945, 3700, tau=3,
+        rectas(t0 + paso*k, t1 + paso*k, 7030, 3760, 
              f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
     
     tiempo = np.linspace(0, tiempo_total, cant_puntos)
