@@ -38,7 +38,7 @@ gamma=24000
 uoch, uolb, uolg, rb, rdis = (350/5.0)*100000000, 0.0001 , 1/20., 0.5*10000000, 24*10000 # 24*10000 , y con 350/3.0, la frec de la oec en 4000 Hz
 fsamp, L=  882000.0, 0.025
 dt = 1/fsamp
-tiempo_total=2.1
+tiempo_total=1.66
 N=int((L/(350*dt))//1)
 
 cant_puntos = np.int(tiempo_total/(dt))
@@ -78,16 +78,22 @@ def forma_amps(inicio, fin):
     else: 
         return lambda t: 1                    
             
-def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3, inicio=True, fin=True):
+def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3,
+         param=1, d=0, inicio=True, fin=True):
     
     i=np.int(ti/dt)
     j=np.int(tf/dt)
-    k = np.arange(j-i) / (j-i) # =  t - ti / (tf - ti)
+    dj = j-i
+    k = np.arange(dj) / dj # =  t - ti / (tf - ti)
+    amps[i:j] = f * forma_amps(inicio, fin)(k)
+    
+    if param == 2:
+        l = int(d/dt)
+        i -= l  
+        k = np.arange(-l, dj) / dj
 
     freqs[i:j] = wf + (wi-wf) * np.exp(-tau * k)
     beta[i:j] = .5
-    amps[i:j] = f * forma_amps(inicio, fin)(k)
-#    amps[i:j] = f
 
 def rectas(ti, tf, wi, wf, f, freqs, beta, amps, 
             param=1, d=0, inicio=True, fin=True):
@@ -101,10 +107,10 @@ def rectas(ti, tf, wi, wf, f, freqs, beta, amps,
     k = np.arange(dj) / dj # =  t - ti / (ti - tf)
     amps[i:j] = f * forma_amps(inicio, fin)(k)
 
-    if param ==2:
+    if param == 2:
         l = int(d/dt)
         i -= l  
-        k = np.arange(i2, j) / dj
+        k = np.arange(-l, dj) / dj
         
     freqs[i:j] = wi + (wf-wi) * k
     beta[i:j] = .5
@@ -122,7 +128,6 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-#    k = np.arange(j-i)/j-i
     k = np.arange(0,1,1/dj)
     amps[i:j]= f * forma_amps(inicio, fin)(k)
     
@@ -130,19 +135,16 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
         freqs[i:j] = media + amplitud * np.sin(alphai + (alphaf - alphai) * k)
         beta[i:j] = .5
     else:
-        l = int(d/dt)
-        i2= i-l   
-#        k = np.arange(-l/dj,1,1/dj)
-#        k = np.linspace(i2, j, j-i2)
-        k = np.arange(i2, j)
-        
         phi = (alphai * j - alphaf * i) / dj
         omega = (alphaf - alphai) / dj
-        freqs[i2:j] = media + amplitud * np.sin(phi + omega * k )
-        beta[i2:j] = .5
-#    new_k = 5* k / (j-i) # = k/tau
-#    amps[i:j] = f * new_k * np.exp(-new_k) * normal(1, .1) * (1 + .4 * np.sin(2*np.pi * k / 6820))
-#    amps[i:j] = f
+        
+        l = int(d/dt)
+        i -= l   
+        k = np.arange(i, j)
+        
+        freqs[i:j] = media + amplitud * np.sin(phi + omega * k )
+        beta[i:j] = .5
+
 
 #%%
 #reinicio valores
@@ -159,7 +161,7 @@ for _ in range(cant_sintesis):
     # -----------------------------------
     
     
-    
+#    ###Original
 #    rectas(0.03,0.42,4529,3200,0.15,frecuencias,beta,amplitudes)
 #    rectas(0.535,0.774+0.01,3990,4300,1,frecuencias,beta,amplitudes)
 #    
@@ -180,17 +182,20 @@ for _ in range(cant_sintesis):
 #    senito(1.87+tiempin,1.92+tiempin,fmax,2740,np.pi,3*np.pi/2.0,.6,frecuencias,beta,amplitudes)
     
     
-    rectas(ti=0.086, tf=0.168, wi=4560, wf=4811, 
-           f=0.15, freqs=frecuencias, beta=beta, amps=amplitudes)
+    ###Chingolo_XC462515_denoised
+    f = .5
+    rectas(ti=0.086, tf=0.168, wi=4560-300, wf=4711-300, 
+           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
     
     expo(ti=0.315, tf=0.569, wi=4260, wf=4030, tau=-1.5,
-           f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
     
     medio=0.729
     rectas(ti=0.677, tf=medio, wi=6030, wf=5730,
-         f=1, freqs=frecuencias, beta=beta, amps=amplitudes, fin=False)
+         f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03,
+         fin=False)
     expo(ti=medio, tf=0.961, wi=5736, wf=1370, tau=0.8,
-           f=1, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
+           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
     
     deltat, t0, t1 = 0.0028, 1.08, 1.124
     paso = deltat + t1 - t0
@@ -237,14 +242,14 @@ for _ in range(cant_sintesis):
         
     sonido = (np.array(v4) * amplitudes * normal(1,0.01))
     sonido *= 1000
-    sonido += 20*normal(0, .007, cant_puntos)
+    sonido += 5*normal(0, .007, cant_puntos)
     
     f, t, Sxx = signal.spectrogram(sonido,fsamp,window=('gaussian',20*128),
                                    nperseg=10*1024,noverlap=18*512,scaling='spectrum')
     fig, ax = plt.subplots()
     ax.pcolormesh(t,f,np.log10(Sxx),rasterized=True,
                   cmap=plt.get_cmap('Greys'))
-    ax.set_ylim(10,15000)
+    ax.set_ylim(10,8000)
     ax.axis('off')
     fig.subplots_adjust(bottom = 0, top = 1, left = 0, right = 1) #para que no tenga bordes blancos
     
@@ -254,7 +259,7 @@ for _ in range(cant_sintesis):
     
     scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
-    write(nombre, int(fsamp), scaled)
+    write(nombre, int(fsamp/20), scaled[::20])
     
     print('listo!')
     print('\a') #sonido al final de la integración

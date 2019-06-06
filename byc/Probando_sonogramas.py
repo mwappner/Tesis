@@ -83,22 +83,27 @@ for i, f in enumerate(sinte):
         print('sinte {}: {}'.format(i,f))
 #%%
 #calculo sonograma
-file = ori[10]
+#file = ori[1]
+file = sinte[4]
 fs, sonido = wavfile.read(file)
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
 
 
 #elimino valores correspondientes a frecuencias muy altas
-lims = 10, 15000
+lims = 10, 8000
 Sxx = Sxx[np.logical_and(f>lims[0], f<lims[1]), :]
 f = f[np.logical_and(f>lims[0], f<lims[1])]
 
-def plotear(im, ax=None, log=False):
+def plotear(im, ax=None, log=False, labels=False):
     if ax is None:
         fig, ax = plt.subplots()
     if log:
         im = np.log10(im)
     ax.pcolormesh(t, f/1000, im,rasterized=True, cmap=plt.get_cmap('Greys'))
+    if labels:
+        plt.xlabel('tiempo [s]')
+        plt.ylabel('frecuencia [Hz]')
+        plt.title(file, fontsize=15)
 #    ax.ticklabel_format(axis='y', style='sci')
 #    ax.set_xlabel('tiempo[s]')
 #    ax.set_ylabel('frecuencia [Hz]')
@@ -130,7 +135,7 @@ sf = normalizar(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1)))
 sfo = thresholdear(sf) # para s da 150; s.mean() = 155
 sfoo = bitificar8(sfo.astype('float'), desv=2, ceros=False)
 
-sfr = rango_dinamico(.6,(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1))))
+sfr = rango_dinamico(.5,(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1))))
 sfor = thresholdear(sfr) # para s da 150; s.mean() = 155
 sfoor = bitificar8(sfor.astype('float'), desv=2, ceros=False)
 
@@ -143,7 +148,7 @@ ims = (n, no, noo,
        sfr, sfor, sfoor)
 titulos = ('normalizar', 'normalizar otsu', 'normalizar otsu contraste',
 #           'bitificar',  'bitificar otsu', 'bitificar otsu contraste', 
-           'gauss_filt_rd0.5', 'gauss_filt otsu', 'gauss_filt otsu contraste',
+           'gauss_filt', 'gauss_filt otsu', 'gauss_filt otsu contraste',
            'gauss_filt_rd0.5', 'gauss_filt_rd0.5 otsu', 'gauss_filt_rd0.5 otsu contraste')
 for im, ti, ax in zip(ims, titulos, axarr.flatten()):
     plotear(im, ax, log=log)
