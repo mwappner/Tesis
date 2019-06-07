@@ -35,7 +35,7 @@ global estimulo1
 global destimulodt1
 
 gamma=24000
-uoch, uolb, uolg, rb, rdis = (350/5.0)*100000000, 0.0001 , 1/20., 0.5*10000000, 24*10000 # 24*10000 , y con 350/3.0, la frec de la oec en 4000 Hz
+uoch, uolb, uolg, rb, rdis = (350/5.0)*1e8, 1e-4, 1/20., 5e6, 2.4e5 # 2.4e5 , y con 350/3.0, la frec de la oec en 4000 Hz
 fsamp, L=  882000.0, 0.025
 dt = 1/fsamp
 tiempo_total=1.66
@@ -160,29 +160,7 @@ for _ in range(cant_sintesis):
     # Genero los parámetros de los cantos
     # -----------------------------------
     
-    
-#    ###Original
-#    rectas(0.03,0.42,4529,3200,0.15,frecuencias,beta,amplitudes)
-#    rectas(0.535,0.774+0.01,3990,4300,1,frecuencias,beta,amplitudes)
-#    
-#    tiempito=1.05
-#    senito(0.863,tiempito,6500,900,-np.pi/2.0-np.pi/4.,1*np.pi,1,frecuencias,beta,amplitudes)
-#    expo(tiempito,1.288,6500+500,3460+100,1.0,frecuencias,beta,amplitudes)
-#    
-#    fmax=5900+100*normal(0,1)
-#    senito(1.33,1.41+0.0005*normal(0,1),fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,1,frecuencias,beta,amplitudes)
-#    senito(1.42+0.0005*normal(0,1),1.48,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,1,frecuencias,beta,amplitudes)
-#    
-#    tiempin=0.0005*normal(0,1)
-#    senito(1.49+tiempin,1.55+tiempin,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,1,frecuencias,beta,amplitudes)
-#    senito(1.57+tiempin,1.62+tiempin,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,1,frecuencias,beta,amplitudes)
-#    senito(1.64+tiempin,1.70+tiempin,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,1,frecuencias,beta,amplitudes)
-#    senito(1.72+tiempin,1.77+tiempin,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,.9,frecuencias,beta,amplitudes)
-#    senito(1.79+tiempin,1.84+tiempin,fmax,2740,np.pi,3*np.pi/2.0+np.pi/16.0,.7,frecuencias,beta,amplitudes)
-#    senito(1.87+tiempin,1.92+tiempin,fmax,2740,np.pi,3*np.pi/2.0,.6,frecuencias,beta,amplitudes)
-    
-    
-    ###Chingolo_XC462515_denoised
+    ### Chingolo_XC462515_denoised
     f = .5
     rectas(ti=0.086, tf=0.168, wi=4560-300, wf=4711-300, 
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
@@ -200,10 +178,11 @@ for _ in range(cant_sintesis):
     deltat, t0, t1 = 0.0028, 1.08, 1.124
     paso = deltat + t1 - t0
     for k in range(7):
-#        rectas(t0 + paso*k, t1 + paso*k, 6945, 3839,
-#               f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    #        rectas(t0 + paso*k, t1 + paso*k, 6945, 3839,
+    #               f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
         rectas(t0 + paso*k, t1 + paso*k, 7030, 3760, 
              f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+
     
     tiempo = np.linspace(0, tiempo_total, cant_puntos)
     fig1, axs= plt.subplots(3,1, sharex=True)
