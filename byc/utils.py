@@ -118,4 +118,34 @@ class Grid:
         #avanzo el contador apra la siguiente imagen
         self.ind += 1
 
-        
+#Grid Testing
+# cant = 33
+# shape = (21,25)
+# g = Grid(cant, trasponer=False, bordes=True, fill=100)
+# for i in range(cant):
+#     g.insert_image(np.ones(shape)*i)
+
+# plt.matshow(g.grid)
+# plt.grid()
+
+# #%%
+
+# cant = 17
+# shape = (11,9)
+# g = Grid(cant, trasponer=False, bordes=True, fill=np.nan)
+# colores = [(0,0,0), (1,0,0), (0,1,0), (0,0,1), (0,1,1), (1,0,1), (1,1,0), 
+#            (1,1,1), (.5,.5,.5), (1,.5,0), (1,0,.5), (.5,1,0), (.5,0,1),
+#            (0,.5,1), (0,1,.5), (.5,0,0), (0,.5,0), (0,0,.5)]
+# imagenes = []
+# for c in colores:
+#     liso = np.ones((*shape,3))
+#     for i in range(3):
+#         liso[:,:,i] *= c[i]
+#     imagenes.append(liso)
+
+# for i in range(cant):
+#     g.insert_image(imagenes[i])
+
+# plt.imshow(g.grid)
+# plt.grid()
+

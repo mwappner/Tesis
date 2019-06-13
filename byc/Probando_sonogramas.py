@@ -84,7 +84,7 @@ for i, f in enumerate(sinte):
 #%%
 #calculo sonograma
 #file = ori[1]
-file = sinte[7]
+file = sinte[8]
 fs, sonido = wavfile.read(file)
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
 
@@ -135,7 +135,7 @@ sf = normalizar(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1)))
 sfo = thresholdear(sf) # para s da 150; s.mean() = 155
 sfoo = bitificar8(sfo.astype('float'), desv=2, ceros=False)
 
-sfr = rango_dinamico(.45,(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1))))
+sfr = rango_dinamico(.47,(np.log10(gaussian_filter(Sxx + 1e-6, sigma=1))))
 sfor = thresholdear(sfr) # para s da 150; s.mean() = 155
 sfoor = bitificar8(sfor.astype('float'), desv=2, ceros=False)
 
