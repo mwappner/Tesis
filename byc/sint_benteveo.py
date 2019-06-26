@@ -192,17 +192,20 @@ for i in range(cant_sintesis):
 
     ### benteveo_BVRoRo_highpass_notch
     f = 1
-    
-    tiempos = np.cumsum(tiempos_steps + normal(0, 0.01, tiempos_steps.shape))
+
+    ruidos_temporales = normal(0, 0.01, tiempos_steps.shape)
+    ruidos_temporales[2] = normal(0, 0.003)
+    ruidos_temporales[5] = normal(0, 0.006)    
+    tiempos = np.cumsum(tiempos_steps + ruidos_temporales)
     
 #    ti1 = max(0.098 + normal(0, 0.04), 0.01) #para que no sea negativo
 #    medio1 = (ti1 + 0.122) * normal(1, 0.07)
 #    tf1 = medio1 + 0.01 * normal(1, 0.1)
-    senito(ti=tiempos[0], tf=tiempos[1], media=-70+normal(0,80), amplitud=1800, alphai=2.44, alphaf=0.7,
+    senito(ti=tiempos[0], tf=tiempos[1], media=-70, amplitud=1800, alphai=2.44, alphaf=0.7,
           f=f*1.6, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.05, 
           fin=False)
     frec_final = frecuencias[int(tiempos[1]/dt)]
-    rectas(ti=tiempos[1], tf=tiempos[2], wi=frec_final, wf=frec_final-310*normal(0,0.1),
+    rectas(ti=tiempos[1], tf=tiempos[2], wi=frec_final, wf=frec_final-310,
           f=f*1.3, freqs=frecuencias, beta=beta, amps=amplitudes, 
           inicio=False)
     
@@ -215,7 +218,7 @@ for i in range(cant_sintesis):
           f=f*1.5, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.05, 
           fin=False)
     frec_final = frecuencias[int(tiempos[4]/dt)]
-    expo(ti=tiempos[4], tf=tiempos[5], wi=frec_final, wf=frec_final-430*normal(1, 0.5), tau=3.4,
+    expo(ti=tiempos[4], tf=tiempos[5], wi=frec_final, wf=frec_final-430, tau=3.4,
         f=f, freqs=frecuencias, beta=beta, amps=amplitudes, 
         inicio=False, fin=False)
     senito(ti=tiempos[5], tf=tiempos[6], media=-1260, amplitud=2380, alphai=7.8, alphaf=7.3,
@@ -226,7 +229,7 @@ for i in range(cant_sintesis):
 #    ti3 = tf2 + 0.046 * normal(1, 0.1)
 #    tf3 = ti3 + 0.329 * normal(1, 0.04)
     senpol(ti=tiempos[7], tf=tiempos[8],
-           media=-7300*normal(1, 0.1), amplitud=8700, alphai=1.86, alphaf=1.22,
+           media=-7300, amplitud=8700, alphai=1.86, alphaf=1.22,
           grado=1, f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)      
     
     corrimiento = 200 + normal(0, 15)
