@@ -12,10 +12,10 @@ it creates wav
 """
 import os
 
-cant_sintesis = 1 #cuantos cantos voy a sintetizar
+cant_sintesis = 10 #cuantos cantos voy a sintetizar
 nombre_base = 'chingolo' #nombre de los sonogramas
-path_sono = os.path.join('nuevos', 'sonogramas')
-path_audio = os.path.join('nuevos', 'audios')
+path_sono = os.path.join('sintetizados', 'prueba_ruidosos')
+#path_audio = os.path.join('nuevos', 'audios')
 
 import numpy as np
 from numpy.random import normal
@@ -38,7 +38,7 @@ gamma=24000
 uoch, uolb, uolg, rb, rdis = (350/5.0)*1e8, 1e-4, 1/20., 5e6, 2.4e5 # 2.4e5 , y con 350/3.0, la frec de la oec en 4000 Hz
 fsamp, L=  882000.0, 0.025
 dt = 1/fsamp
-tiempo_total=1.66
+tiempo_total=1.8
 N=int((L/(350*dt))//1)
 
 cant_puntos = np.int(tiempo_total/(dt))
@@ -84,7 +84,7 @@ def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(dj) / dj # =  t - ti / (tf - ti)
+    k = np.linspace(0,1,dj) # =  t - ti / (tf - ti)
     amps[i:j] = f * forma_amps(inicio, fin)(k)
     
     if param == 2:
@@ -104,7 +104,7 @@ def rectas(ti, tf, wi, wf, f, freqs, beta, amps,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(dj) / dj # =  t - ti / (ti - tf)
+    k = np.linspace(0,1,dj) # =  t - ti / (ti - tf)
     amps[i:j] = f * forma_amps(inicio, fin)(k)
 
     if param == 2:
@@ -128,7 +128,7 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(0,1,1/dj)
+    k = np.linspace(0,1,dj)
     amps[i:j]= f * forma_amps(inicio, fin)(k)
     
     if param==1:
@@ -145,13 +145,12 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
         freqs[i:j] = media + amplitud * np.sin(phi + omega * k )
         beta[i:j] = .5
 
-tiempos = 0.086, 0.315, 0.677, 0.729, 0.961
+tiempos = 0.086, 0.168, 0.315, 0.569, 0.677, 0.729, 0.961, 1.08, 1.124
 intervalos = np.diff(tiempos)
-completos = np.array((tiempos[0], *intervalos))
 
 #%%
 #reinicio valores
-for _ in range(cant_sintesis):
+for i in range(cant_sintesis):
     
     frecuencias=np.zeros(cant_puntos)
     amplitudes=np.zeros(cant_puntos)
@@ -159,7 +158,8 @@ for _ in range(cant_sintesis):
     
     v = np.array([0.01, 0.001, 0.001, 0.0001, 0.0001])
 
-    tiempos_ruidosos = np.cumsum(completos + random(0, 0.007, completos.shape))
+    completos = np.array((max(tiempos[0] + normal(0, 0.02), 0.033), *intervalos))
+    tiempos_ruidosos = np.cumsum(completos + normal(0, 0.007, completos.shape))
     
     # -----------------------------------
     # Genero los parámetros de los cantos
@@ -167,33 +167,38 @@ for _ in range(cant_sintesis):
     
     ### Chingolo_XC462515_denoised
     f = .5
-    rectas(ti=0.086, tf=0.168, wi=4560-300, wf=4711-300, 
+    f0 = 4260 *normal(1,0.1)
+    rectas(tiempos[0], tiempos[1], wi=f0, wf=f0 + 150 * normal(1,0.1), 
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
     
-    expo(ti=0.315, tf=0.569, wi=4260, wf=4030, tau=-1.5,
+    f0 = 4260 *normal(1,0.1)
+    expo(tiempos[2], tiempos[3], 
+         wi=f0, wf=f0 - 230 * normal(1,0.01), tau=-1.5,
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
     
-    medio=0.729
-    rectas(ti=0.677, tf=medio, wi=6030, wf=5730,
+    f0 = 6030 *normal(1,0.1)
+    rectas(tiempos[4], tiempos[5], wi=f0, wf=f0 - 300 * normal(1,0.1),
          f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03,
          fin=False)
-    expo(ti=medio, tf=0.961, wi=5736, wf=1370, tau=0.8,
+    frec_final = frecuencias[int(tiempos[5]/dt)-1]
+    expo(tiempos[5], tiempos[6], 
+         wi=frec_final, wf=frec_final - 4366 * normal(1, 0.06), tau=0.8,
            f=f, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
     
-    deltat, t0, t1 = 0.0028, 1.08, 1.124
-    paso = deltat + t1 - t0
+    deltat, t0, t1 = 0.0028, tiempos[7], tiempos[8]
+    paso = deltat + normal(0,0.0003) + t1 - t0
+    fi = 7030 * normal(1, 0.03)
+    ff = fi - 3270 * normal(1, 0.02)
     for k in range(7):
-    #        rectas(t0 + paso*k, t1 + paso*k, 6945, 3839,
-    #               f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-        rectas(t0 + paso*k, t1 + paso*k, 7030, 3760, 
+        rectas(t0 + paso*k, t1 + paso*k, fi * normal(1, 0.02), ff, 
              f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
 
     
-    tiempo = np.linspace(0, tiempo_total, cant_puntos)
-    fig1, axs= plt.subplots(3,1, sharex=True)
-    axs[0].plot(tiempo[::10],frecuencias[::10], '.')
-    axs[1].plot(tiempo[::10],amplitudes[::10], '.')
-    axs[2].plot(tiempo[::10],beta[::10], '.')
+#    tiempo = np.linspace(0, tiempo_total, cant_puntos)
+#    fig1, axs= plt.subplots(3,1, sharex=True)
+#    axs[0].plot(tiempo[::10],frecuencias[::10], '.')
+#    axs[1].plot(tiempo[::10],amplitudes[::10], '.')
+#    axs[2].plot(tiempo[::10],beta[::10], '.')
 #%%
     # -------
     # Integro
@@ -241,11 +246,11 @@ for _ in range(cant_sintesis):
     fig.savefig(nombre, dpi=100)
     plt.close()
     
-    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
-    nombre = creo_nombre(path_audio, nombre_base, '.wav')
-    write(nombre, int(fsamp/20), scaled[::20])
+#    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
+#    nombre = creo_nombre(path_audio, nombre_base, '.wav')
+#    write(nombre, int(fsamp/20), scaled[::20])
     
-    print('listo!')
-    print('\a') #sonido al final de la integración
+    print('listo {} de {}!'.format(i+1, cant_sintesis))
+#    print('\a') #sonido al final de la integración
     
 

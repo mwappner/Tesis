@@ -13,9 +13,9 @@ it creates wav
 
 import os
 
-cant_sintesis = 1 #cuantos cantos voy a sintetizar
+cant_sintesis = 10 #cuantos cantos voy a sintetizar
 nombre_base = 'benteveo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'pruea_ruidosos')
+path_sono = os.path.join('sintetizados', 'prueba_ruidosos')
 #path_audio = os.path.join('nuevos', 'audios')
 #path_sono = path_audio = 'filtro'
 
@@ -85,7 +85,7 @@ def expo(ti, tf, wi, wf, f, freqs, beta, amps, tau=3,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(dj) / dj # =  t - ti / (tf - ti)
+    k = np.linspace(0,1,dj) # =  t - ti / (tf - ti)
     amps[i:j] = f * forma_amps(inicio, fin)(k)
     
     if param == 2:
@@ -105,7 +105,7 @@ def rectas(ti, tf, wi, wf, f, freqs, beta, amps,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(dj) / dj # =  t - ti / (ti - tf)
+    k = np.linspace(0,1,dj) # =  t - ti / (ti - tf)
     amps[i:j] = f * forma_amps(inicio, fin)(k)
 
     if param == 2:
@@ -129,7 +129,7 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(0,1,1/dj)
+    k = np.linspace(0,1,dj)
     amps[i:j]= f * forma_amps(inicio, fin)(k)
     
     if param==1:
@@ -137,7 +137,7 @@ def senito(ti, tf, media, amplitud, alphai, alphaf,
         beta[i:j] = .5
     else:
         l = int(d/dt)
-        i2= i-l   
+        i2= max( 10, i-l)
         k = np.arange(i2, j)
         
         phi = (alphai * j - alphaf * i) / dj
@@ -158,7 +158,7 @@ def senpol(ti, tf, media, amplitud, alphai, alphaf, grado,
     i=np.int(ti/dt)
     j=np.int(tf/dt)
     dj = j-i
-    k = np.arange(0,1,1/dj)
+    k = np.linspace(0,1,dj)
     amps[i:j]= f * forma_amps(inicio, fin)(k)
     
     if param==1:
@@ -166,7 +166,7 @@ def senpol(ti, tf, media, amplitud, alphai, alphaf, grado,
         beta[i:j] = .5
     else:
         l = int(d/dt)
-        i2= i-l   
+        i2= max( 10, i-l)   
         k = np.arange(i2, j)
         
         phi = (alphai * j - alphaf * i) / dj
@@ -193,50 +193,53 @@ for i in range(cant_sintesis):
     ### benteveo_BVRoRo_highpass_notch
     f = 1
 
-    ruidos_temporales = normal(0, 0.01, tiempos_steps.shape)
-    ruidos_temporales[2] = normal(0, 0.003)
-    ruidos_temporales[5] = normal(0, 0.006)    
-    tiempos = np.cumsum(tiempos_steps + ruidos_temporales)
+    ruidos_temporales = normal(1, 0.1, tiempos_steps.shape)
+    #ruido inicial más grande, pero no tan grande que el valor de d me de tiempo <0
+    ruidos_temporales[0] = max(0.52, normal(1, 0.3))
+    #el ruido (multiplicativo) en estos es demasiado
+    ruidos_temporales[1] = normal(1, 0.003) 
+    ruidos_temporales[3] = normal(1, 0.003)
+    ruidos_temporales[-1] = normal(1, 0.003)
+    tiempos = np.cumsum(tiempos_steps * ruidos_temporales)
+#    tiempos = np.cumsum(tiempos_steps)
     
-#    ti1 = max(0.098 + normal(0, 0.04), 0.01) #para que no sea negativo
-#    medio1 = (ti1 + 0.122) * normal(1, 0.07)
-#    tf1 = medio1 + 0.01 * normal(1, 0.1)
-    senito(ti=tiempos[0], tf=tiempos[1], media=-70, amplitud=1800, alphai=2.44, alphaf=0.7,
-          f=f*1.6, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.05, 
-          fin=False)
-    frec_final = frecuencias[int(tiempos[1]/dt)]
-    rectas(ti=tiempos[1], tf=tiempos[2], wi=frec_final, wf=frec_final-310,
-          f=f*1.3, freqs=frecuencias, beta=beta, amps=amplitudes, 
-          inicio=False)
+    senito(ti=tiempos[0], tf=tiempos[1], 
+           media=-70 + normal(0,0.15), amplitud=1800*normal(1, 0.08), alphai=2.44, alphaf=0.7,
+          f=f*1.6, freqs=frecuencias, beta=beta, amps=amplitudes, 
+          param=2, d=0.05, fin=False)
+    frec_final1 = frecuencias[int(tiempos[1]/dt)-1]
+    rectas(ti=tiempos[1], tf=tiempos[2],
+           wi=frec_final1, wf=frec_final1-310*normal(1, 0.1),
+          f=f*1.3, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
     
     #A: opcion 2 (mejor)
-#    ti2 = tf1 + 0.154 * normal(1, 0.06)
-#    medio21 = ti2 + 0.019 * normal(1, 0.1)
-#    medio22 = medio21 + 0.03 * normal(1, 0.1)
-#    tf2 = medio22 + 0.026 * normal(1, 0.1)
-    senito(tiempos[3], tf=tiempos[4], media=-900, amplitud=2530, alphai=2.35, alphaf=1.29,
-          f=f*1.5, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.05, 
-          fin=False)
-    frec_final = frecuencias[int(tiempos[4]/dt)]
-    expo(ti=tiempos[4], tf=tiempos[5], wi=frec_final, wf=frec_final-430, tau=3.4,
-        f=f, freqs=frecuencias, beta=beta, amps=amplitudes, 
-        inicio=False, fin=False)
-    senito(ti=tiempos[5], tf=tiempos[6], media=-1260, amplitud=2380, alphai=7.8, alphaf=7.3,
+    senito(tiempos[3], tf=tiempos[4],
+           media=-900*normal(1,0.1), amplitud=2530*normal(1,0.1),
+           alphai=2.35, alphaf=1.29,
+          f=f*1.5, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.05, fin=False)
+    frec_final2 = frecuencias[int(tiempos[4]/dt)-1]
+    expo(ti=tiempos[4], tf=tiempos[5],
+         wi=frec_final2, wf=frec_final2 - 430 * normal(1, 0.1), tau=3.4,
+        f=f, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False, fin=False)
+    frec_final3 = frecuencias[int(tiempos[5]/dt)-1]
+    A = 2380 * normal(1, 0.1)
+    ai = 7.8
+    m = frec_final3 - A * np.sin(ai)
+    senito(ti=tiempos[5], tf=tiempos[6], media=m, amplitud=A, alphai=ai, alphaf=7.3,
           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, 
           inicio=False)
         
     #B: opcion 3 (mejor)
-#    ti3 = tf2 + 0.046 * normal(1, 0.1)
-#    tf3 = ti3 + 0.329 * normal(1, 0.04)
     senpol(ti=tiempos[7], tf=tiempos[8],
-           media=-7300, amplitud=8700, alphai=1.86, alphaf=1.22,
+           media=-7300*normal(1,0.04), amplitud=8700*normal(1,0.02),
+           alphai=1.86, alphaf=1.22,
           grado=1, f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)      
     
     corrimiento = 200 + normal(0, 15)
     donde = frecuencias != 0
     frecuencias[donde] = frecuencias[donde] - corrimiento
 
-    #ploteo los parámetros
+#    #ploteo los parámetros
     tiempo = np.linspace(0, tiempo_total, cant_puntos)
     fig1, axs= plt.subplots(3,1, sharex=True)
     axs[0].plot(tiempo[::10],frecuencias[::10], '.')
@@ -292,7 +295,7 @@ for i in range(cant_sintesis):
     
     nombre = creo_nombre(path_sono, nombre_base, '.jpg')
     fig.savefig(nombre, dpi=100)
-#    plt.close()
+    plt.close()
     
 #    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
 #    nombre = creo_nombre(path_audio, nombre_base, '.wav')
