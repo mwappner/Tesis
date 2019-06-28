@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from time import time
 
 def bitificar8(im,desv=1):
     '''Devuelve la imagen pasada a 8 bits. Puede reescalar la desviación.'''
@@ -39,6 +40,19 @@ def new_name(name, newseparator='_'):
         i += 1
         
     return name
+
+class Testimado:
+
+    def __init__(self, cant_total):
+        self.cant_total = cant_total
+        self.inicio = time()
+
+    def restante(self, indice):
+        return (self.cant_total / indice - 1) * self.trancurrido()
+
+    def transcurrido(self):
+        return time() - self.inicio
+
 
 class Grid:
     '''Una clase para crear y llenar una grilla con imagenes.'''
