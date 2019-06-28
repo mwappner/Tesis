@@ -28,10 +28,10 @@ import matplotlib
 matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
-from utils import new_name
+from utils import new_name, Testimado
 
 creo_nombre = lambda path, base, formato: new_name(os.path.join(path, base + formato))
-
+estimador = Testimado(cant_sintesis)
 # --------------------
 # Parámetros generales
 # --------------------
@@ -254,7 +254,7 @@ for i in range(cant_sintesis):
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
     write(nombre, int(fsamp/20), scaled[::20])
     
-    print('listo {} de {}!'.format(i+1, cant_sintesis))
+    print('listo {} de {}! Tiempo restante estimado: {}'.format(i+1, cant_sintesis, estimador.restante()))
 #    print('\a') #sonido al final de la integración
     
 
