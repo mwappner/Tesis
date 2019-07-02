@@ -52,6 +52,16 @@ class Testimado:
 
     def transcurrido(self):
         return time() - self.inicio
+    
+    def horas_minutos(self):
+         horas, rem = divmod(self.transcurrido(), 3600)
+         minutos = rem//60
+         return horas, minutos
+         
+    def horas_minutos_segundos(self):
+         horas, rem = divmod(self.transcurrido(), 3600)
+         minutos, segundos= divmod(rem, 60)
+         return (horas, minutos, segundos)
 
 
 class Grid:

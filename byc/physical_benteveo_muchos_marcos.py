@@ -107,9 +107,9 @@ for i in range(cant_sintesis):
 # -----------------------------------
 # Genero los parámetros de los cantos
 # -----------------------------------    
-    senito(0.166,0.32+0.05*normal(1,0.1),1310*0.5*normal(1,0.1),200*0.5*normal(1,0.1),0,np.pi,0.7*1.1,frecuencias,beta,amplitudes)
+    senito(0.166, 0.32+0.05*normal(1,0.1), 1310*0.5*normal(1,0.1), 200*0.5*normal(1,0.1), 0,np.pi,0.7*1.1,frecuencias,beta,amplitudes)
     senito(0.58,0.7,1305*0.5*normal(1,0.1),600*0.5*normal(1,0.1),-np.pi/4.0,3*np.pi/2.0,0.7*1,frecuencias,beta,amplitudes)
-    senito(0.74+0.05*normal(1,0.1),1.06,1301,200*normal(1,0.05),0,np.pi+np.pi/4.0,0.7*1,frecuencias,beta,amplitudes)
+    senito(0.74+0.05*normal(1,0.1), 1.06, 1301, 200*normal(1,0.05), 0, np.pi+np.pi/4.0, 0.7*1, frecuencias,beta,amplitudes)
     
 # -------
 # Integro
