@@ -306,7 +306,7 @@ for i in range(cant_sintesis):
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
     write(nombre, int(fsamp/20), scaled[::20])
         
-    print('listo {} de {}! ETA: {}:{}'.format(i+1, cant_sintesis, *estimador.horas_minutos(i)))
+    print('listo {} de {}! ETA: {}'.format(i+1, cant_sintesis, estimador.time_str(i)))
 #    print('\a') #sonido al final de la integración
     
         

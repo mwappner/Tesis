@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from time import time
+import time
 
 def bitificar8(im,desv=1):
     '''Devuelve la imagen pasada a 8 bits. Puede reescalar la desviación.'''
@@ -45,13 +45,13 @@ class Testimado:
 
     def __init__(self, cant_total):
         self.cant_total = cant_total
-        self.inicio = time()
+        self.inicio = time.time()
 
     def restante(self, indice):
-        return round((self.cant_total / (indice+1) - 1) * self.transcurrido() / 60)
+        return round((self.cant_total / (indice+1) - 1) * self.transcurrido())
 
     def transcurrido(self):
-        return time() - self.inicio
+        return time.time() - self.inicio
     
     def horas_minutos(self, i):
          horas, rem = divmod(self.restante(i), 3600)
@@ -62,7 +62,10 @@ class Testimado:
          horas, rem = divmod(self.restante(i), 3600)
          minutos, segundos= divmod(rem, 60)
          return (horas, minutos, segundos)
-
+     
+    def time_str(self, i, include_times = 'hm'):
+        format_tring = ':'.join('%{}'.format(s.upper()) for s in include_times)
+        return time.strftime(format_tring, time.gmtime(self.restante(i)))
 
 class Grid:
     '''Una clase para crear y llenar una grilla con imagenes.'''
