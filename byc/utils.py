@@ -48,18 +48,18 @@ class Testimado:
         self.inicio = time()
 
     def restante(self, indice):
-        return round((self.cant_total / indice - 1) * self.transcurrido() / 60)
+        return round((self.cant_total / (indice+1) - 1) * self.transcurrido() / 60)
 
     def transcurrido(self):
         return time() - self.inicio
     
-    def horas_minutos(self):
-         horas, rem = divmod(self.transcurrido(), 3600)
+    def horas_minutos(self, i):
+         horas, rem = divmod(self.restante(i), 3600)
          minutos = rem//60
          return horas, minutos
          
-    def horas_minutos_segundos(self):
-         horas, rem = divmod(self.transcurrido(), 3600)
+    def horas_minutos_segundos(self, i):
+         horas, rem = divmod(self.restante(i), 3600)
          minutos, segundos= divmod(rem, 60)
          return (horas, minutos, segundos)
 

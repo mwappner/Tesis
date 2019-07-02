@@ -209,7 +209,7 @@ for i in range(cant_sintesis):
 #    tiempos = np.cumsum(tiempos_steps)
     
     senito(ti=tiempos[0], tf=tiempos[1], 
-           media=-70 + normal(0,0.15), amplitud=1800*normal(1, 0.08), alphai=2.44, alphaf=0.7,
+           media=-70 + normal(0,0.15), amplitud=1800*normal(1, 0.1), alphai=2.44, alphaf=0.7,
           f=f*1.6, freqs=frecuencias, beta=beta, amps=amplitudes, 
           param=2, d=0.05, fin=False)
     frec_final1 = frecuencias[int(tiempos[1]/dt)-1]
@@ -236,7 +236,7 @@ for i in range(cant_sintesis):
         
     #B: opcion 3 (mejor)
     senpol(ti=tiempos[7], tf=tiempos[8],
-           media=-7300*normal(1,0.025), amplitud=8700*normal(1,0.012),
+           media=-7300*normal(1,0.02), amplitud=8700*normal(1,0.016),
            alphai=1.86, alphaf=1.22,
           grado=1, f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)      
     
@@ -245,11 +245,11 @@ for i in range(cant_sintesis):
     frecuencias[donde] = frecuencias[donde] - corrimiento
 
 #    #ploteo los parámetros
-    tiempo = np.linspace(0, tiempo_total, cant_puntos)
-    fig1, axs= plt.subplots(3,1, sharex=True)
-    axs[0].plot(tiempo[::10],frecuencias[::10], '.')
-    axs[1].plot(tiempo[::10],amplitudes[::10], '.')
-    axs[2].plot(tiempo[::10],beta[::10], '.')
+#    tiempo = np.linspace(0, tiempo_total, cant_puntos)
+#    fig1, axs= plt.subplots(3,1, sharex=True)
+#    axs[0].plot(tiempo[::10],frecuencias[::10], '.')
+#    axs[1].plot(tiempo[::10],amplitudes[::10], '.')
+#    axs[2].plot(tiempo[::10],beta[::10], '.')
 
 #%%
 # -------
@@ -306,7 +306,7 @@ for i in range(cant_sintesis):
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
     write(nombre, int(fsamp/20), scaled[::20])
         
-    print('listo {} de {}! ETA: {} mins'.format(i+1, cant_sintesis, estimador.restante(i+1)))
+    print('listo {} de {}! ETA: {}:{}'.format(i+1, cant_sintesis, *estimador.horas_minutos(i)))
 #    print('\a') #sonido al final de la integración
     
         
