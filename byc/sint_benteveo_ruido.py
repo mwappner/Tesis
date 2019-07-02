@@ -13,10 +13,10 @@ it creates wav
 
 import os
 
-cant_sintesis = 10 #cuantos cantos voy a sintetizar
+cant_sintesis = 2500 #cuantos cantos voy a sintetizar
 nombre_base = 'benteveo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'prueba_ruidosos')
-#path_audio = os.path.join('nuevos', 'audios')
+path_sono = os.path.join('sintetizados', 'sonogramas', 'benteveos')
+path_audio = os.path.join('sintetizados', 'audios', 'benteveos')
 #path_sono = path_audio = 'filtro'
 
 import numpy as np
@@ -25,10 +25,15 @@ from numpy.random import normal
 from scipy.io.wavfile import write
 from scipy import signal
 
+#para correr remotamente
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
-from utils import new_name
+from utils import new_name, Testimado
 
 creo_nombre = lambda path, base, formato: new_name(os.path.join(path, base + formato))
+estimador = Testimado(cant_sintesis)
 
 # --------------------
 # Parámetros generales
@@ -231,7 +236,7 @@ for i in range(cant_sintesis):
         
     #B: opcion 3 (mejor)
     senpol(ti=tiempos[7], tf=tiempos[8],
-           media=-7300*normal(1,0.04), amplitud=8700*normal(1,0.02),
+           media=-7300*normal(1,0.025), amplitud=8700*normal(1,0.012),
            alphai=1.86, alphaf=1.22,
           grado=1, f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)      
     
@@ -295,14 +300,13 @@ for i in range(cant_sintesis):
     
     nombre = creo_nombre(path_sono, nombre_base, '.jpg')
     fig.savefig(nombre, dpi=100)
-    plt.close()
+    plt.close(fig)
     
-#    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
-#    nombre = creo_nombre(path_audio, nombre_base, '.wav')
-#    write(nombre, int(fsamp/20), scaled[::20])
-    
-    
-    print('listo {} de {}!'.format(i+1, cant_sintesis))
+    scaled = (sonido/np.max(np.abs(sonido))).astype(np.float32)
+    nombre = creo_nombre(path_audio, nombre_base, '.wav')
+    write(nombre, int(fsamp/20), scaled[::20])
+        
+    print('listo {} de {}! ETA: {} mins'.format(i+1, cant_sintesis, estimador.restante(i+1)))
 #    print('\a') #sonido al final de la integración
     
         

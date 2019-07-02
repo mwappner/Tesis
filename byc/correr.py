@@ -1,4 +1,4 @@
 print('Importando 1!')
-import physical_benteveo_muchos
+import sint_benteveo_ruido
 print('Importando 2!')
-import physical_chingolo_muchos
+import sint_chingolo_ruido
