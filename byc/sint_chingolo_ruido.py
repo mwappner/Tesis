@@ -12,10 +12,10 @@ it creates wav
 """
 import os
 
-cant_sintesis = 10 #cuantos cantos voy a sintetizar
+cant_sintesis = 2500 #cuantos cantos voy a sintetizar
 nombre_base = 'chingolo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'prueba_ruidosos')
-path_audio = os.path.join('sintetizados', 'prueba_ruidosos')
+path_sono = os.path.join('sintetizados', 'sonogramas', 'chingolos')
+path_audio = os.path.join('sintetizados', 'audios', 'chingolos')
 
 import numpy as np
 from numpy.random import normal
@@ -233,9 +233,8 @@ for i in range(cant_sintesis):
         v4.append(v[4])
         # sonido[cont]=back[0]
         
-    sonido = (np.array(v4) * amplitudes * normal(1,0.01))
-    sonido *= 1000
-    sonido += 5*normal(0, .007, cant_puntos)
+    sonido = np.array(v4) * amplitudes
+    sonido += normal(0, 7e-4, len(sonido))
     
     f, t, Sxx = signal.spectrogram(sonido,fsamp,window=('gaussian',20*128),
                                    nperseg=10*1024,noverlap=18*512,scaling='spectrum')
@@ -254,7 +253,7 @@ for i in range(cant_sintesis):
     nombre = creo_nombre(path_audio, nombre_base, '.wav')
     write(nombre, int(fsamp/20), scaled[::20])
     
-    print('listo {} de {}! Tiempo restante estimado: {}'.format(i+1, cant_sintesis, estimador.restante()))
+    print('listo {} de {}! ETA: {} mins'.format(i+1, cant_sintesis, estimador.restante(i+1)))
 #    print('\a') #sonido al final de la integración
     
 

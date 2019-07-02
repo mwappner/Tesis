@@ -48,7 +48,7 @@ class Testimado:
         self.inicio = time()
 
     def restante(self, indice):
-        return (self.cant_total / indice - 1) * self.trancurrido()
+        return round((self.cant_total / indice - 1) * self.transcurrido() / 60)
 
     def transcurrido(self):
         return time() - self.inicio
