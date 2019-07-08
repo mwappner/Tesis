@@ -17,9 +17,9 @@ from scipy.ndimage import gaussian_filter
 
 archivos = lambda direc: [os.path.join(direc, f) for f in os.listdir(direc)]
 
-def bitificar8(im,desv=1, ceros=True):
+def bitificar8(im, desv=1, ceros=True):
     '''Devuelve la imagen pasada a 8 bits. Puede reescalar la desviación.'''
-    #normalizo la imagen a [-1, 1]
+    #normalizo la imagen a [-1, 1] y reescalo
     
     #Decido si contar o no los ceros en el cálculo d la media
     if ceros:        
@@ -84,10 +84,9 @@ for i, f in enumerate(sinte):
 #%%
 #calculo sonograma
 #file = ori[1]
-file = sinte[8]
+file = sinte[18]
 fs, sonido = wavfile.read(file)
 f, t, Sxx = mispec(sonido, fs, sigma=.15)
-
 
 #elimino valores correspondientes a frecuencias muy altas
 lims = 10, 8000

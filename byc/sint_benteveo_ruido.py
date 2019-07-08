@@ -284,7 +284,7 @@ for i in range(cant_sintesis):
     
     
     sonido = np.array(v4) * amplitudes
-    sonido += normal(0, 7e-4, len(sonido))
+    sonido += normal(0, sonido.std()/2, len(sonido))
     
     f, t, Sxx = signal.spectrogram(sonido, fsamp, window=('gaussian',20*128),
                                    nperseg=10*1024, noverlap=18*512, scaling='spectrum')

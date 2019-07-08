@@ -12,10 +12,10 @@ it creates wav
 """
 import os
 
-cant_sintesis = 2500 #cuantos cantos voy a sintetizar
+cant_sintesis = 20 #cuantos cantos voy a sintetizar
 nombre_base = 'chingolo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'sonogramas', 'chingolos')
-path_audio = os.path.join('sintetizados', 'audios', 'chingolos')
+path_sono = os.path.join('sintetizados', 'locales', 'sonogramas', 'chingolos')
+path_audio = os.path.join('sintetizados', 'locales', 'audios', 'chingolos')
 
 import numpy as np
 from numpy.random import normal
@@ -234,7 +234,7 @@ for i in range(cant_sintesis):
         # sonido[cont]=back[0]
         
     sonido = np.array(v4) * amplitudes
-    sonido += normal(0, 7e-4, len(sonido))
+    sonido += normal(0, sonido.std()/2, len(sonido))
     
     f, t, Sxx = signal.spectrogram(sonido,fsamp,window=('gaussian',20*128),
                                    nperseg=10*1024,noverlap=18*512,scaling='spectrum')

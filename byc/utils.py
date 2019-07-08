@@ -63,8 +63,14 @@ class Testimado:
          minutos, segundos= divmod(rem, 60)
          return (horas, minutos, segundos)
      
-    def time_str(self, i, include_times = 'hm'):
-        format_tring = ':'.join('%{}'.format(s.upper()) for s in include_times)
+    def time_str(self, i, include_times = 'HM'):
+        '''Devuelve un string con el tiempo restante formateado según se indica
+        en include_times.
+        j: días
+        H: horas
+        M: minutos
+        S: segundos'''
+        format_tring = ':'.join('%{}'.format(s) for s in include_times)
         return time.strftime(format_tring, time.gmtime(self.restante(i)))
 
 class Grid:
