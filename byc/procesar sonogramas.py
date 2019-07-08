@@ -5,7 +5,7 @@ Created on Sun Jul  7 17:46:43 2019
 @author: Marcos
 """
 import os
-from filtro_sonogramas import FiltroSonograma
+from utils import FiltroSonograma
 
 carpeta_de_salida_ching = os.path.join('sintetizados', 'locales', 'audios', 'chingolos')
 carpeta_de_llegada_ching = os.path.join('sintetizados', 'locales', 'sonogramas', 'chingolos')
