@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 from skimage import filters
 
+from utils import new_name, Testimado
 
 #%%
 
@@ -114,23 +115,38 @@ class FiltroSonograma:
         self.normalizar(bits)
     
     
-    def cut_or_extend(self):
+    def cut_or_extend(self, centered=False):
         '''Si la duración actual del sonido es más grande que la del sonido 
         objetivo, recorta el final. Si es más chica, rellena con ceros.'''
         if self.tiempos[-1] > self.target_dur:
             self.sono = self.sono[:, self.tiempos<self.target_dur]
+            
         elif self.tiempos[-1] < self.target_dur:
             dt = self.tiempos[1] - self.tiempos[0]
             cant_faltante = int((self.target_dur - self.tiempos[-1])/dt)
-            self.sono = np.append(self.sono, 
-                                  np.zeros((self.sono.shape[0], cant_faltante)), 
-                                  axis=1)
+            
+            if centered:
+                antes = int(np.floor(cant_faltante/2))
+                despues = int(np.ceil(cant_faltante/2))
+                patron = ((0,0),(antes, despues))
+            else:
+                patron = ((0,0),(0,cant_faltante))
+            
+            # lleno con ceros
+            self.sono = np.pad(self.sono, pad_width=patron, 
+                               mode='constant', constant_values=0)
+
         #redefino el vector de tiempos para graficar 
         self.tiempos = np.linspace(self.tiempos[0], self.target_dur, self.sono.shape[1])
             
     
     def plotear(self, im=None, ax=None, log=False, labels=False):
-        
+        '''Formatea una imagen con título y ejes, y la plotea.
+            im: imagen a graficar. Default: self.sono
+            ax: eje donde graficar. Default: nuevo eje
+            log: [True|False] tomar logaritmo de los datos antes de graficar.
+            labels: [True|False] Decide si poner o no labels.'''
+            
         im = im or self.sono #si no le di una imagen, uso el guardado
         
         if ax is None:
@@ -143,3 +159,35 @@ class FiltroSonograma:
             plt.xlabel('tiempo [s]')
             plt.ylabel('frecuencia [Hz]')
             plt.title(self.archivo, fontsize=15)
+
+    def guardar(self, nombre=None, ubicacion=None, extension='jpg'):
+        '''Guarda el sonograma en 'ubicacion/nombre.extension'. Si no se le da nombre
+        o ubicación, utiliza el del archivo anterior. Notar que nunca reemplazará dicho 
+        archivo.'''
+        
+        #Chequeo valores y fijo defaults
+        extensiones_validas = ('jpg', 'jpeg', 'png')
+        if extension.lower() not in extensiones_validas:
+            raise ValueError('Extension debe ser una de {}'.format(extensiones_validas))
+        
+        u, n = os.path.split(self.nombre)
+        ubicacion = ubicacion or u
+        nombre = nombre or os.path.splitext(n)[0]
+        
+        #Ploteo
+        fig, ax = plt.subplots()
+        ax.pcolormesh(self.tiempos, self.frecuencias,
+                      self.sono,
+                      rasterized=True,
+                      cmap=plt.get_cmap('Greys'))
+        ax.set_ylim(self.lims)
+        ax.axis('off')
+        fig.subplots_adjust(bottom = 0, top = 1, left = 0, right = 1) #para que no tenga bordes blancos
+        
+        #Guardo
+        nombre = new_name(os.path.join(ubicacion, '.'.join((nombre,extension))))
+        fig.savefig(nombre, dpi=100)
+        plt.close(fig)
+        
+        print('Saved: {}'.format(nombre))
+    
