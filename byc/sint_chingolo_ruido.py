@@ -14,8 +14,8 @@ import os
 
 cant_sintesis = 2500 #cuantos cantos voy a sintetizar
 nombre_base = 'chingolo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'locales', 'sonogramas', 'chingolos')
-path_audio = os.path.join('sintetizados', 'locales', 'audios', 'chingolos')
+path_sono = os.path.join('sintetizados', 'sonogramas', 'chingolos')
+path_audio = os.path.join('sintetizados', 'audios', 'chingolos')
 
 import numpy as np
 from numpy.random import normal
