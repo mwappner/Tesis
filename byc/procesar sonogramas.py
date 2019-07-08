@@ -55,10 +55,10 @@ file_index = 0
 ###====================================###
 #s = FiltroSonograma(sinte[file_index]) #sonidos sintetizados
 #s = FiltroSonograma(ori[file_index]) #sonidos originales
-s = FiltroSonograma(sonidos[file_index], gauss_filt=False)
+s = FiltroSonograma(sonidos[file_index], gauss_filt=False, target_duration=1.8)
 
 s.rango_dinamico(0.5)
 s.thresholdear()
 #s.bitificar8(desv=2, ceros=False)
-#s.cut_or_extend()
+s.cut_or_extend()
 s.plotear()

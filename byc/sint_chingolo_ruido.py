@@ -12,7 +12,7 @@ it creates wav
 """
 import os
 
-cant_sintesis = 20 #cuantos cantos voy a sintetizar
+cant_sintesis = 2500 #cuantos cantos voy a sintetizar
 nombre_base = 'chingolo' #nombre de los sonogramas
 path_sono = os.path.join('sintetizados', 'locales', 'sonogramas', 'chingolos')
 path_audio = os.path.join('sintetizados', 'locales', 'audios', 'chingolos')
