@@ -1,12 +1,17 @@
 import numpy as np
 import os
 import time
+import re
 
 from scipy.signal import spectrogram
 from scipy.io import wavfile
 from scipy.ndimage import gaussian_filter
 from skimage import filters
 
+
+#para correr remotamente
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -48,6 +53,57 @@ def new_name(name, newseparator='_'):
         i += 1
         
     return name
+
+def natural_sort(l): 
+    convert = lambda text: int(text) if text.isdigit() else text.lower() 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)
+
+class contenidos(list):
+
+    def __init__(self, carpeta, full_path=True, natsort=True):
+        '''Si full_path=True, los elementos de la lista serán los contenidos de la carpeta
+        apendeados con el nombre de la carpeta en sí. Si no, serán sólo los contenidos, en
+        cuyo caso habrá algunas funconalidads no disponibles.'''
+        self.carpeta = carpeta
+        self.full_path = full_path
+        self.update()
+        if natsort:
+            self.natural_sort()
+
+    def update(self):
+        if self.full_path:
+            super().__init__((os.path.join(self.carpeta, f) for f in os.listdir(self.carpeta)))
+        else:
+            super().__init__(os.listdir(self.carpeta))
+
+    def natural_sort(self):
+        convert = lambda text: int(text) if text.isdigit() else text.lower() 
+        self.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key)])
+
+    def filtered_ext(self, extension):
+        '''Crea una nueva lista de las cosas con la extensión correspondiente.'''
+        return [elem for elem in self if elem.endswith(extension)]
+
+    def filter_ext(self, extension):
+        '''Elimina de la lista todo lo que no tenga la extensión correspondiente'''
+        super().__init__(self.filtered_ext(extension))
+
+    def files(self):
+        '''Devuelve nueva lista de sólo los elementos que son archivos.'''
+        return [elem for elem in self if os.path.isfile(elem)]
+        
+    def keep_fies(self):
+        '''Elimina de la lista todo lo que no sean archivos.'''
+        super().__init__(self.files())
+
+    def directories(self):
+        '''Devuelve nueva lista de sólo los elementos que son carpetas.'''
+        return [elem for elem in self if os.path.isdir(elem)]
+    
+    def keep_dirs(self):
+        '''Elimina de la lista todo lo que no sean carpetas.'''
+        super().__init__(self.directories())
 
 class Testimado:
 
@@ -257,6 +313,8 @@ class FiltroSonograma:
         plt.close(fig)
         
         print('Saved: {}'.format(nombre))
+
+        return nombre
 
 class Grid:
     '''Una clase para crear y llenar una grilla con imagenes.'''

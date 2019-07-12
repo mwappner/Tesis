@@ -13,11 +13,19 @@ it creates wav
 
 import os
 
-cant_sintesis = 2500 #cuantos cantos voy a sintetizar
+# Cantidad de cantos a sintetizar
+default_cant_sintesis = 100 #cuantos cantos voy a sintetizar
+cant_sintesis = int(os.getenv('CANT_SINTESIS', default_cant_sintesis))
+
+# Ubicación de destino
+base_sono = os.environ.get('SONO_BASE_DIR') or os.path.join('sintetizados', 'sonogramas')
+base_audio = os.environ.get('AUDIO_BASE_DIR') or os.path.join('sintetizados', 'audios')
+
+path_sono = os.path.join(base_sono, 'benteveos')
+path_audio = os.path.join(base_audio, 'benteveos')
+
 nombre_base = 'benteveo' #nombre de los sonogramas
-path_sono = os.path.join('sintetizados', 'sonogramas', 'benteveos')
-path_audio = os.path.join('sintetizados', 'audios', 'benteveos')
-#path_sono = path_audio = 'filtro'
+
 
 import numpy as np
 from numpy.random import normal

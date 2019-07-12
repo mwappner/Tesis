@@ -26,9 +26,13 @@ import os
 #from keras.preprocessing import image
 #import numpy as np
 
-base = 'C:\\Users\\Marcos\\Documents\\Facu\\Tesis\\byc'
-train_dir = os.path.join(base,'sintetizados\\sonogramas\\train')
-validation_dir = os.path.join(base,'sintetizados\\sonogramas\\validaion')
+# base = 'C:\\Users\\Marcos\\Documents\\Facu\\Tesis\\byc'
+# train_dir = os.path.join(base,'sintetizados\\sonogramas\\train')
+# validation_dir = os.path.join(base,'sintetizados\\sonogramas\\validaion')
+
+BASE_DIR = 'sintetizados','dnn', 'pad'
+train_dir = os.path.join(*BASE_DIR, 'train')
+val_dir = os.path.join(*BASE_DIR, 'validate')
 
 model=models.Sequential()
 model.add(layers.Conv2D(4,(3,3),kernel_regularizer=regularizers.l2(0.001),activation='relu',input_shape=(300,200,3)))
@@ -65,7 +69,7 @@ train_generator=train_datagen.flow_from_directory(
         batch_size=30,
         class_mode='binary')
 validation_generator=validation_datagen.flow_from_directory(
-        validation_dir,
+        val_dir,
         target_size=(300,200),
         color_mode='rgb',
         batch_size=10,

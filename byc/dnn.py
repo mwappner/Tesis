@@ -14,29 +14,30 @@ from keras.preprocessing.image import ImageDataGenerator
 
 im_size = (300, 200)
 BATCH_SIZE = 32
-train_dir = os.path.join('sintetizados', 'sonogramas', 'train')
-val_dir = os.path.join('sintetizados', 'sonogramas', 'validation')
+BASE_DIR = 'sintetizados','dnn', 'pad'
+train_dir = os.path.join(*BASE_DIR, 'train')
+val_dir = os.path.join(*BASE_DIR, 'validate')
 
-#%% Opción 1
-model = models.Sequential()
-model.add(layers.Conv2D(16, kernel_size=7, strides=2, input_shape=(500, 300, 1),
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Conv2D(16, kernel_size=3, strides=1, 
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Conv2D(32, kernel_size=3, strides=1, 
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Conv2D(64, kernel_size=3, strides=1, 
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Flatten())
-#model.add(layers.Dropout(0.5)) #baja el overfitting
-model.add(layers.Dense(512, activation='relu'))
-model.add(layers.Dense(2, activation='softmax'))
+# #%% Opción 1
+# model = models.Sequential()
+# model.add(layers.Conv2D(16, kernel_size=7, strides=2, input_shape=(500, 300, 1),
+#           kernel_regularizer=regularizers.l2(0.001)))
+# model.add(layers.MaxPooling2D(2))
+# model.add(layers.Conv2D(16, kernel_size=3, strides=1, 
+#           kernel_regularizer=regularizers.l2(0.001)))
+# model.add(layers.MaxPooling2D(2))
+# model.add(layers.Conv2D(32, kernel_size=3, strides=1, 
+#           kernel_regularizer=regularizers.l2(0.001)))
+# model.add(layers.MaxPooling2D(2))
+# model.add(layers.Conv2D(64, kernel_size=3, strides=1, 
+#           kernel_regularizer=regularizers.l2(0.001)))
+# model.add(layers.MaxPooling2D(2))
+# model.add(layers.Flatten())
+# #model.add(layers.Dropout(0.5)) #baja el overfitting
+# model.add(layers.Dense(512, activation='relu'))
+# model.add(layers.Dense(2, activation='softmax'))
 
-model.summary()
+# model.summary()
 
 #%% Opcion 2
 
@@ -58,7 +59,7 @@ model.add(layers.Dropout(0.5)) #baja el overfitting
 model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(2, activation='softmax'))
 
-model.summary()
+# model.summary()
 
 #%% Compilo y armo generadores
 
