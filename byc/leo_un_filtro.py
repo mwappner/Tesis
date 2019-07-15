@@ -8,15 +8,14 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from utils import bitificar8, filcol, new_name
+from utils import bitificar8, new_name
 
-#%% cambio el directorio y cargo modelo
-
-ubicacion = 'modelos'
-modelo = load_model(os.path.join(ubicacion, 'Benteveos_Chingolos.h6'))
+#%% Cargo la red neuronal guardada en ubicación
+ubicacion = 'Gabos'
+modelo = load_model(os.path.join(ubicacion, 'Chingolos.h6'))
 #modelo.summary() #recuerdo qué tenía
 
-#cre una func. que arma la imagen visualizada
+#crea una func. que arma la imagen visualizada
 def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
     
     layer_output = modelo.get_layer(layer_name).output #la capa
@@ -32,15 +31,18 @@ def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
         input_img_data += grads_value * step #nuevo input corrigiendo con el gradiente
 
     img = input_img_data[0]
-    return bitificar8(img,0.1)
+    return bitificar8(img, 0.1)
 
+
+# La capa mirar y el índice del filtro en la capa:
 layer, index = 2, 3
 nombre = modelo.layers[layer].name
 este_filtro = generate_pattern(nombre, index, modelo, iteraciones=100)
-este_filtro = np.squeeze(este_filtro)
+este_filtro = np.squeeze(este_filtro) #porque hay dimensiones extra que no me sirven para plotear
 
 #print(este_filtro.shape)
 
+#muestro el filtro
 plt.imshow(este_filtro) #cmap=plt.get_cmap('Greys'))
 plt.axis('off')
 nombre = new_name(os.path.join('filtros','un_filtro_capa{}_ind{}.jpg'.format(layer, index)))

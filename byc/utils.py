@@ -54,6 +54,12 @@ def new_name(name, newseparator='_'):
         
     return name
 
+def make_dirs_noreplace(dirs_paths):
+    try:
+        os.makedirs(dirs_paths)
+    except FileExistsError:
+        print('While creating ', dirs_paths, 'found it already exists.')
+
 def natural_sort(l): 
     convert = lambda text: int(text) if text.isdigit() else text.lower() 
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
@@ -319,7 +325,7 @@ class FiltroSonograma:
 class Grid:
     '''Una clase para crear y llenar una grilla con imagenes.'''
        
-    def __init__(self, cant, fill=np.nan, trasponer=False, bordes=True):
+    def __init__(self, cant, fill_with=np.nan, trasponer=False, bordes=True):
 
         self.cant = cant #cantidad de imagenes
         self.trasponer = trasponer #por default, la grilla es más ancha que alta
@@ -329,7 +335,7 @@ class Grid:
         self.grid = None #la grilla a llenar con imagenes
         #self.im_shape = None #tamaño de la imagen
         self.ind = 0 #por qué imagen voy?
-        self.fill_with = fill #con qué lleno la grilla vacía
+        self.fill_with = fill_with #con qué lleno la grilla vacía
 
     @property
     def im_shape(self):
@@ -347,8 +353,8 @@ class Grid:
     def _cant_to_mat(self):
         '''Dimensiones de la cuadrícula más pequeña y más cuadrada
         posible que puede albergar [self.cant] cosas.'''
-        col = int(np.ceil(np.sqrt(cant)))
-        row = int(round(np.sqrt(cant)))
+        col = int(np.ceil(np.sqrt(self.cant)))
+        row = int(round(np.sqrt(self.cant)))
         if self.trasponer:
             return col, row
         else:
@@ -393,6 +399,11 @@ class Grid:
         
         #avanzo el contador apra la siguiente imagen
         self.ind += 1
+        
+    def show(self, **kw):
+        if self.grid is None:
+            raise ValueError('No se insertaron imagenes aún.')
+        plt.imshow(self.grid, cmap=kw.pop('cmap', 'viridis'), **kw)
 
 #Grid Testing
 # cant = 33

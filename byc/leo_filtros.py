@@ -9,15 +9,18 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from utils import bitificar8, Grid, new_name, ensure_dir
+from utils import bitificar8, Grid, new_name, make_dirs_noreplace
 
 #%% cambio el directorio y cargo modelo
 
-ubicacion = 'modelos'
-nombre_modelo = 'Benteveos_Chingolos_gray.h6'
+ubicacion = 'Gabos'
+nombre_modelo = 'Chingolos.h6'
 modelo = load_model(os.path.join(ubicacion, nombre_modelo))
 modelo.summary() #recuerdo qué tenía
-save_dir = ensure_dir(os.path.join('filtros', os.path.splitext(nombre_modelo)[0]), isfile=False)
+
+# Carpeta donde guarda las imagenes de los filtros
+save_dir = make_dirs_noreplace(os.path.join(
+        'filtros', os.path.splitext(nombre_modelo)[0]), isfile=False)
 
 #cre una func. que arma la imagen visualizada
 def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
@@ -38,19 +41,25 @@ def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
     return bitificar8(img,0.1)
 
 #%% Grafico filtros
-nombres = [l.name for l in modelo.layers if 'conv' in l.name] #nomres de las capas convolutivas
+    
+# Nomres de las capas convolutivas
+nombres = [l.name for l in modelo.layers if 'conv' in l.name]
 
-
+# Itero sobre todos los filtros de las capas convolutivas
 for capa_ind, nombre in enumerate(nombres):
     print('Corriendo capa '+ nombre)
 
+    # Cantidad de filtros en esta capa
     cant_filtros = modelo.layers[capa_ind].output_shape[3] #cant de filtros
-    g = Grid(cant_filtros, fill=0, trasponer=True)
+    # Una grilla donde meto las imagenes de cada filtro
+    g = Grid(cant_filtros, fill=0, trasponer=True) 
 
+    # Proceso los filtros y los meto en la grilla
     for filtro_ind in range(cant_filtros):
         channel_filter = generate_pattern(nombre, filtro_ind, modelo)
         channel_filter = np.squeeze(channel_filter)
 
+        # channel_filter es la imagen en cuestión
         g.insert_image(channel_filter)
 
     plt.imshow(g.grid)
