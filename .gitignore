@@ -6,6 +6,7 @@
 *.zip
 *.eps
 *.jpeg
+*.npz
 Borradores/
 byc/sintetizados/*
 
