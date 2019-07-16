@@ -13,14 +13,15 @@ from utils import bitificar8, Grid, new_name, make_dirs_noreplace
 
 #%% cambio el directorio y cargo modelo
 
-ubicacion = 'Gabos'
-nombre_modelo = 'Chingolos.h6'
+ubicacion = 'modelos/byc_peque_pad'
+nombre_modelo = 'byc.h6'
 modelo = load_model(os.path.join(ubicacion, nombre_modelo))
 modelo.summary() #recuerdo qué tenía
 
 # Carpeta donde guarda las imagenes de los filtros
-save_dir = make_dirs_noreplace(os.path.join(
-        'filtros', os.path.splitext(nombre_modelo)[0]), isfile=False)
+# save_dir = make_dirs_noreplace(os.path.join(
+#         'filtros', os.path.splitext(nombre_modelo)[0]))
+save_dir = ubicacion
 
 #cre una func. que arma la imagen visualizada
 def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
@@ -52,7 +53,7 @@ for capa_ind, nombre in enumerate(nombres):
     # Cantidad de filtros en esta capa
     cant_filtros = modelo.layers[capa_ind].output_shape[3] #cant de filtros
     # Una grilla donde meto las imagenes de cada filtro
-    g = Grid(cant_filtros, fill=0, trasponer=True) 
+    g = Grid(cant_filtros, fill_with=0, trasponer=True) 
 
     # Proceso los filtros y los meto en la grilla
     for filtro_ind in range(cant_filtros):
@@ -62,7 +63,8 @@ for capa_ind, nombre in enumerate(nombres):
         # channel_filter es la imagen en cuestión
         g.insert_image(channel_filter)
 
-    plt.imshow(g.grid)
+    # plt.imshow(g.grid)
+    g.show()
     nombre = new_name(os.path.join(save_dir, 'filtros_{}.jpg'.format(nombre)))
     plt.savefig(nombre)
     plt.close()

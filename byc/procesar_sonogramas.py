@@ -16,6 +16,10 @@ carpeta_de_llegada_ching = lambda modo: os.path.join('sintetizados', 'dnn', modo
 carpeta_de_salida_bent = os.path.join('sintetizados', 'audios', 'benteveos')
 carpeta_de_llegada_bent = lambda modo: os.path.join('sintetizados', 'dnn', modo, 'train', 'benteveo')
 
+bent_original = 'nuevos/originales/benteveo_BVRoRo_highpass_notch.wav'
+ching_original = 'nuevos/originales/chingolo_XC462515_denoised.wav'
+carpeta_de_llegada_ori = lambda modo: os.path.join('sintetizados', 'dnn', modo, 'originales')
+
 def procesar_benteveo(archivo, destino, dur=None, modo='pad'):
     s = FiltroSonograma(archivo, target_duration=dur)
 
@@ -61,10 +65,15 @@ for modo in modos[1:]:
 	for file in contenidos(carpeta_de_llegada_ching('pad')):
 		copyfile(file, file.replace('pad', modo))
 
-#muevo a validation
+#muevo a validation y a test
 for modo in modos:
 	mover(carpeta_de_llegada_bent(modo), destino='validate', cant=500) 
 	mover(carpeta_de_llegada_ching(modo), destino='validate', cant=500)
 
-    mover(carpeta_de_llegada_bent(modo), destino='test/test_folder', cant=100, subcarpeta='train/benteveo')
-    mover(carpeta_de_llegada_bent(modo), destino='test/test_folder', cant=100, subcarpeta='train/chingolo')
+    mover(carpeta_de_llegada_bent(modo), destino='test', cant=100) 
+    mover(carpeta_de_llegada_ching(modo), destino='test', cant=100)
+
+#proceso los originales
+for modo in modos:
+    procesar_benteveo(bent_original, carpeta_de_llegada_ori(modo), dur=DURACION, modo=modo)
+    procesar_chingolo(ching_original, carpeta_de_llegada_ori(modo), dur=DURACION)

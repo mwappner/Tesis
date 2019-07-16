@@ -1,4 +1,3 @@
-import numpy as np
 import os
 import time
 import re
@@ -7,7 +6,7 @@ from scipy.signal import spectrogram
 from scipy.io import wavfile
 from scipy.ndimage import gaussian_filter
 from skimage import filters
-
+import numpy as np
 
 #para correr remotamente
 import matplotlib
@@ -68,22 +67,91 @@ def natural_sort(l):
     return sorted(l, key = alphanum_key)
 
 class contenidos(list):
+    '''Subclase de lista que toma un directorio y crea una lista de los contenidos.
+    
+    -----------
+    Parámetros:
+        carpeta : str
+            Directorio cuyo contenido se quiere recolectar. Default: el directorio de trabajo actual,
+            dado por os.getcwd()
+        full_path : bool
+            Decide si los elementos de la lista son el contenido del directorio en cuestión,
+            si se le agrega el nombre del directorio: ['capeta/subcarpeta1', 'capeta/subcarpeta2',
+            'capeta/archivo.py']. Default: True
+        natsort = bool
+            Decide si ordenar o no los contenidos de la carpeta utilizando "orden natural", en vez
+            de alfanumérico. Defualt = True
+        filter_ext : None, str, iterable
+            Filtra los contenidos de la lista por extensión. Si es None, no filta. Para quedarse
+            sólo con los directorios, utilizar un string vacío ''. Para quedarse con varios tipos
+            de archivos, utilizar una tupla de valores. Las extensiones deben ir con punto: '.jpg', 
+            '.py', '.txt', etc.
 
-    def __init__(self, carpeta, full_path=True, natsort=True):
+    --------
+    Métodos:
+        update():
+            Actualiza la lista si los contenidos de la carpeta cambiaron.
+        natural_sort():
+            Ordena la lista según orden natural.
+        filtered_ext(ext):
+            devuelve una NUEVA lista sólo con los elementos cuya extensión es ext
+        files():
+            devuelve una NUEVA lista sólo con los elementos que son archivos
+        directories():
+            devuelve una NUEVA lista sólo con los elementos que son directorios
+        keep_files():
+            modifica esta lista para quedarse sólo con los archivos
+        keep_dirs():
+            modifica esta lista para quedarse sólo con los directorios
+
+    '''
+    def __init__(self, carpeta=None, full_path=True, natsort=True, filter_ext=None):
         '''Si full_path=True, los elementos de la lista serán los contenidos de la carpeta
         apendeados con el nombre de la carpeta en sí. Si no, serán sólo los contenidos, en
         cuyo caso habrá algunas funconalidads no disponibles.'''
-        self.carpeta = carpeta
-        self.full_path = full_path
-        self.update()
+        self.carpeta = carpeta or os.getcwd()
+        self._full_path = full_path
+        self.filter_ext = filter_ext
+
         if natsort:
             self.natural_sort()
 
-    def update(self):
-        if self.full_path:
-            super().__init__((os.path.join(self.carpeta, f) for f in os.listdir(self.carpeta)))
+    @property
+    def filter_ext(self):
+        return self._filter_ext
+    @filter_ext.setter
+    def filter_ext(self, value):
+        if isinstance(value, str):
+            self._filter_ext_tup = (value,)
+        elif hasattr(value, '__iter__'):
+            self._filter_ext_tup = value
+        elif value is None:
+            pass 
         else:
-            super().__init__(os.listdir(self.carpeta))
+            raise TypeError('filter_ext debe ser un string con una única extensión, o un iterable con varias extensiones.')
+        self._filter_ext = value
+        self.update()
+
+    @property
+    def full_path(self):
+        return self._full_path
+    @full_path.setter
+    def full_path(self, value):
+        if not isinstance(value, bool):
+            raise TypeError('full_path debe ser booleano.')
+        self._full_path = value
+        self.update()
+
+    def update(self):
+        if self.filter_ext is None:
+            archivos = os.listdir(self.carpeta)
+        else:
+            archivos = (f for f in os.listdir(self.carpeta) if os.path.splitext(f)[-1] in self._filter_ext_tup)
+
+        if self.full_path:
+            super().__init__((os.path.join(self.carpeta, f) for f in archivos))
+        else:
+            super().__init__(archivos)
 
     def natural_sort(self):
         convert = lambda text: int(text) if text.isdigit() else text.lower() 
@@ -93,9 +161,9 @@ class contenidos(list):
         '''Crea una nueva lista de las cosas con la extensión correspondiente.'''
         return [elem for elem in self if elem.endswith(extension)]
 
-    def filter_ext(self, extension):
-        '''Elimina de la lista todo lo que no tenga la extensión correspondiente'''
-        super().__init__(self.filtered_ext(extension))
+    # def filter_ext(self, extension):
+    #     '''Elimina de la lista todo lo que no tenga la extensión correspondiente'''
+    #     super().__init__(self.filtered_ext(extension))
 
     def files(self):
         '''Devuelve nueva lista de sólo los elementos que son archivos.'''
