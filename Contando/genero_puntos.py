@@ -29,5 +29,4 @@ for i, cant in enumerate(cant_puntos):
             coords.append(nueva)
             agregar_punto(imagen[i,:,:], nueva)
 
-
 np.savez('circulos', imagen=imagen, cant_puntos=cant_puntos)
