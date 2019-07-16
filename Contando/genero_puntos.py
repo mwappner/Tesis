@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-CANT_SINTESIS = 10000
-MAX_PUNTOS = 7
+CANT_SINTESIS = 20000
+MAX_PUNTOS = 45
 MIN_DIST = 3
 TAM_IMG = 32
 
@@ -29,4 +29,7 @@ for i, cant in enumerate(cant_puntos):
             coords.append(nueva)
             agregar_punto(imagen[i,:,:], nueva)
 
-np.savez('circulos', imagen=imagen, cant_puntos=cant_puntos)
+    if not i+1%200:
+        print('Completados {} de {}'.format(i+1, CANT_SINTESIS))
+
+np.savez('circulos_muchos', imagen=imagen, cant_puntos=cant_puntos)
