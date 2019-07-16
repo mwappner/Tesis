@@ -34,28 +34,28 @@ from keras.utils import to_categorical
 
 #%% Miro algunas imagenes
 
-from scipy.misc import imshow
-import numpy as np
+# from scipy.misc import imshow
+# import numpy as np
 
-inicial = 0; #imagen inicial
-cant = 30; #cant*cant imagenes en total
+# inicial = 0; #imagen inicial
+# cant = 30; #cant*cant imagenes en total
 
-vertical = np.ones([1,28]).transpose() * 255 #columna de ceros
-horizontal = np.ones([29*cant+1]) *255
-todo = np.copy(horizontal)
-for k in range(cant):
-    fila = np.copy(vertical) #inicio la fila
+# vertical = np.ones([1,28]).transpose() * 255 #columna de ceros
+# horizontal = np.ones([29*cant+1]) *255
+# todo = np.copy(horizontal)
+# for k in range(cant):
+#     fila = np.copy(vertical) #inicio la fila
     
-    for l in range(cant):
-        fila = np.hstack((fila,train_images[k*cant+l,:,:],vertical))
+#     for l in range(cant):
+#         fila = np.hstack((fila,train_images[k*cant+l,:,:],vertical))
         
-    todo = np.vstack((todo,fila,horizontal))
+#     todo = np.vstack((todo,fila,horizontal))
 
-#para que sea un poco más griss (imshow reescala así que no anda)
-todo /= 2
-todo = todo.astype(int)
+# #para que sea un poco más griss (imshow reescala así que no anda)
+# todo /= 2
+# todo = todo.astype(int)
 
-imshow(todo)
+# imshow(todo)
 #%% Reordeno aimagenes y entreno la red
 
 train_images = train_images.reshape((60000, 28, 28, 1)) #le agrego una columna
@@ -72,7 +72,7 @@ model.fit(train_images, train_labels, epochs=5, batch_size=64)
 #%% Testeo
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
-test_acc
+print('test accuracy: ', test_acc)
 
 #%% Guardo modelo
 

@@ -60,6 +60,8 @@ def make_dirs_noreplace(dirs_paths):
     except FileExistsError:
         print('While creating ', dirs_paths, 'found it already exists.')
 
+    return dirs_paths
+
 def natural_sort(l): 
     convert = lambda text: int(text) if text.isdigit() else text.lower() 
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
