@@ -156,6 +156,14 @@ class contenidos(list):
     def natural_sort(self):
         convert = lambda text: int(text) if text.isdigit() else text.lower() 
         self.sort(key=lambda key: [convert(c) for c in re.split('([0-9]+)', key)])
+        
+    def print_orden(self, only_basename=True):
+        if only_basename:
+            for i, f in enumerate(self):
+                print('{}: {}'.format(i, os.path.basename(f)))
+        else:
+            for i, f in enumerate(self):
+                print('{}: {}'.format(i, f))
 
     def filtered_ext(self, extension):
         '''Crea una nueva lista de las cosas con la extensión correspondiente.'''

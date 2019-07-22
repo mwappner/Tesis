@@ -67,9 +67,9 @@ for modo in modos[1:]:
 
 #muevo a validation y a test
 for modo in modos:
-	mover(carpeta_de_llegada_bent(modo), destino='validate', cant=500) 
-	mover(carpeta_de_llegada_ching(modo), destino='validate', cant=500)
-
+    mover(carpeta_de_llegada_bent(modo), destino='validate', cant=500) 
+    mover(carpeta_de_llegada_ching(modo), destino='validate', cant=500)
+    
     mover(carpeta_de_llegada_bent(modo), destino='test', cant=100) 
     mover(carpeta_de_llegada_ching(modo), destino='test', cant=100)
 
