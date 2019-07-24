@@ -22,7 +22,8 @@ from utils import new_name, contenidos
 
 #%% Parámetros generales
 
-im_size = (300, 200)
+#im_size = (300, 200) #medidas viejas
+im_size = (200, 300)
 BATCH_SIZE = 32
 BASE_DIR = 'sintetizados','dnn', 'stretch'
 train_dir = os.path.join(*BASE_DIR, 'train')
@@ -30,7 +31,7 @@ val_dir = os.path.join(*BASE_DIR, 'validate')
 test_dir = os.path.join(*BASE_DIR, 'test')
 ori_dir = os.path.join(*BASE_DIR, 'originales')
 
-nombre_guardado = 'modelos/byc_peque_stretch'
+nombre_guardado = 'modelos/byc_peque_pad_derecho'
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
