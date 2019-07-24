@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from keras import models
 from keras.preprocessing import image
 
-from utils import contenidos, Grid
+from utils import contenidos, Grid, new_name
 
 modo = 'pad'
 
@@ -28,7 +28,7 @@ modelos = contenidos(model_dir)
 modelos.print_orden()
 
 
-im_size = (200, 300) #!!!!!
+im_size = (300, 200) 
 def cargar_imagen(im_path):
     img = image.load_img(im_path, target_size=im_size, color_mode = "grayscale")
     x = image.img_to_array(img)
@@ -47,10 +47,17 @@ def bitificar8(im,desv=1):
     return im
 #%% Elijo modelo y corro
 
-este_modelo = 1
+este_modelo = 5
 modelo = models.load_model(contenidos(modelos[este_modelo], filter_ext='.h6')[0])
 
-una_imagen = cargar_imagen(contenidos(train_dir_chin)[0])
+########MODIFICAR ESTO###########
+imagen_nombre = contenidos(ori_dir_bent)[19]
+carpeta_de_guardado = 'ori_bent_' + os.path.basename(imagen_nombre).split('_')[0]
+################################
+
+carpeta_de_guardado = new_name(os.path.join(modelos[este_modelo], carpeta_de_guardado))
+os.makedirs(carpeta_de_guardado)
+una_imagen = cargar_imagen(imagen_nombre)
 
 ### Creo un modelo para mirar activaciones ###
 
@@ -70,15 +77,15 @@ layer_names = [l.name for l in modelo.layers if 'conv' in l.name]
 for layer_name, layer_activation in zip(layer_names, activations): #zip simplemente me da dos iteradores
         
     n_features = layer_activation.shape[-1] #cant de filtros
-    size = layer_activation.shape[1] #tamaño del filtro de la capa (es cuadrado)
+    size = layer_activation.shape[1:3] #tamaño del filtro de la capa (es cuadrado)
 
-    g = Grid(n_features, fill_with=np.nan)    
+    g = Grid(n_features, fill_with=np.nan, bordes=True)    
     for ch_image in range(n_features):
         channel_image = layer_activation[0,:, :, ch_image]
         g.insert_image(bitificar8(channel_image, 2))
 
     g.show()
-    plt.title('{0}: {1}x{1}'.format(layer_name,size-1))
+    plt.title('{}: {}x{}'.format(layer_name,*size))
     plt.grid(False)
-    plt.savefig(layer_name + '.jpg')
+    plt.savefig(os.path.join(carpeta_de_guardado, layer_name + '.jpg'), bbox='tight', dpi=400)
     plt.close()
