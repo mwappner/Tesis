@@ -28,7 +28,7 @@ modelos = contenidos(model_dir)
 modelos.print_orden()
 
 
-im_size = (300, 200)
+im_size = (200, 300) #!!!!!
 def cargar_imagen(im_path):
     img = image.load_img(im_path, target_size=im_size, color_mode = "grayscale")
     x = image.img_to_array(img)
@@ -50,7 +50,7 @@ def bitificar8(im,desv=1):
 este_modelo = 1
 modelo = models.load_model(contenidos(modelos[este_modelo], filter_ext='.h6')[0])
 
-una_imagen = cargar_imagen(contenidos(train_dir_bent)[0])
+una_imagen = cargar_imagen(contenidos(train_dir_chin)[0])
 
 ### Creo un modelo para mirar activaciones ###
 

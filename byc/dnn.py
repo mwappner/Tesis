@@ -54,7 +54,7 @@ model.add(layers.Dropout(0.5)) #baja el overfitting
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(2, activation='softmax'))
 
-# model.summary()
+model.summary()
 
 #%% Compilo y armo generadores
 
