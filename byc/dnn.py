@@ -25,13 +25,16 @@ from utils import new_name, contenidos
 #im_size = (300, 200) #medidas viejas
 im_size = (200, 300)
 BATCH_SIZE = 32
-BASE_DIR = 'sintetizados','dnn', 'stretch'
+
+MODO = 'pad'
+
+BASE_DIR = 'sintetizados','dnn', MODO
 train_dir = os.path.join(*BASE_DIR, 'train')
 val_dir = os.path.join(*BASE_DIR, 'validate')
 test_dir = os.path.join(*BASE_DIR, 'test')
 ori_dir = os.path.join(*BASE_DIR, 'originales')
 
-nombre_guardado = 'modelos/byc_peque_pad_derecho'
+nombre_guardado = 'modelos/byc_peque_' + MODO + '_derecho'
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
@@ -46,7 +49,7 @@ model.add(layers.MaxPooling2D(2))
 model.add(layers.Conv2D(8, kernel_size=3, strides=1, 
           kernel_regularizer=regularizers.l2(0.001)))
 # model.add(layers.MaxPooling2D(2))
-# model.add(layers.Conv2D(16, kernel_size=3, strides=1, 
+# model.add(layers.Conv2D(8, kernel_size=3, strides=1, 
 #           kernel_regularizer=regularizers.l2(0.001)))
 model.add(layers.MaxPooling2D(2))
 model.add(layers.Flatten())
@@ -110,14 +113,62 @@ plt.close()
 # test_loss, test_acc = model.evaluate_generator(test_gen)
 # print('Test accuracy: ', test_acc)
 
+# =========================
 # Pruebo con los originales
+def cargar_imagen(im_path):
+    img = image.load_img(im_path, target_size=im_size, grayscale=True)
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    return x
+
 categorias = {k:v for v, k in train_generator.class_indices.items()}
 imgs_paths = contenidos(ori_dir)
 for path in imgs_paths:
-	img = image.load_img(path, target_size=im_size, grayscale=True)
-	x = image.img_to_array(img)
-	x = np.expand_dims(x,axis=0)
+	x = cargar_imagen(path)
 	preds = model.predict(x)
 	preds = np.squeeze(preds)
 	print(os.path.basename(path))
 	print('{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))
+
+# =========================
+# Testeo para cantos reales
+ori_dir_chin = os.path.join('nuevos', 'originales', 'sonos', MODO, 'chingolo')
+ori_dir_bent = os.path.join('nuevos', 'originales', 'sonos', MODO, 'benteveo')
+
+resultados = {'bent':[], 'ching':[]}
+paths = {'bent':ori_dir_bent, 'ching':ori_dir_chin}
+
+for pajaro in paths:
+    print(pajaro.upper())
+    print()
+    for i, path in enumerate(contenidos(paths[pajaro])):
+        
+        x = cargar_imagen(path)
+        
+        preds = model.predict(x)
+        preds = np.squeeze(preds)
+        
+        resultados[pajaro].append(preds)
+        print(i, '{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))
+    print()
+
+cm = np.array(
+        [[sum((b>c for b, c in resultados['bent'])), sum((b<c for b, c in resultados['bent']))],
+       [sum((b>c for b, c in resultados['ching'])), sum((b<c for b, c in resultados['ching']))]]
+        )
+acc = (cm[0,0] + cm[1,1])/(len(resultados['bent']) + len(resultados['ching']))
+err = 1-acc
+recB = cm[0,0]/sum(cm[0])
+recC = cm[1,1]/sum(cm[1])
+precB = cm[0,0]/(cm[0,0]+cm[1,0])
+precC = cm[1,1]/(cm[1,1]+cm[0,1])
+
+# cm contiene:
+#___________________
+# bent TP | ching FP
+# bent FP | ching TP
+
+print(cm)
+print('acc =', np.round(acc, 2), ', err =', np.round(err, 2))
+print('recB =', np.round(recB, 2), ', recC =', np.round(recC, 2))
+print('precB =', np.round(precB, 2), ', precC =', np.round(precC, 2))
