@@ -325,7 +325,14 @@ class FiltroSonograma:
         '''Si la duración actual del sonido es más grande que la del sonido 
         objetivo, recorta el final. Si es más chica, rellena con ceros.'''
         if self.tiempos[-1] > self.target_dur:
-            self.sono = self.sono[:, self.tiempos<self.target_dur]
+            if centered:
+                dt = self.tiempos[1] - self.tiempos[0]
+                tiempo_extra = self.tiempos[-1] - self.target_dur
+                desde = int(np.floor(tiempo_extra/dt))
+                hasta = int(np.ceil(tiempo_extra/dt))
+                self.sono = self.sono[:, desde:-hasta]
+            else:
+                self.sono = self.sono[:, self.tiempos<self.target_dur]
             
         elif self.tiempos[-1] < self.target_dur:
             dt = self.tiempos[1] - self.tiempos[0]

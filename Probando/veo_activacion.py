@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Para visualizar activación de cada filtro dada una imagen
-
 """
 import os
 import numpy as np
@@ -18,7 +17,7 @@ modelo.summary() #recuerdo qué tenía
 
 #%% cargo el dataset y me quedo con una de las de entrenamiento
 
-k = 126 #elijo qué imagen mirar
+k = 11 #elijo qué imagen mirar
 
 (imagenes, labels) = mnist.load_data()[1] #cargo sólo las imagenes de prueba
 
