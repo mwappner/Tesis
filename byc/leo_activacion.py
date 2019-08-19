@@ -51,8 +51,8 @@ este_modelo = 5
 modelo = models.load_model(contenidos(modelos[este_modelo], filter_ext='.h6')[0])
 
 ########MODIFICAR ESTO###########
-imagen_nombre = contenidos(ori_dir_bent)[19]
-carpeta_de_guardado = 'ori_bent_' + os.path.basename(imagen_nombre).split('_')[0]
+imagen_nombre = contenidos(ori_dir_chin)[21]
+carpeta_de_guardado = 'ori_chin_' + os.path.basename(imagen_nombre).split('-')[0][:-1]
 ################################
 
 carpeta_de_guardado = new_name(os.path.join(modelos[este_modelo], carpeta_de_guardado))
