@@ -95,6 +95,29 @@ def profunda(im_size):
     return model
 
 
+def mas_profunda(im_size):
+    model = models.Sequential()
+    model.add(layers.Conv2D(4, kernel_size=5, strides=1, input_shape=(*im_size, 1),
+              kernel_regularizer=regularizers.l2(0.001)))
+    model.add(layers.MaxPooling2D(2)) # Será mucho?
+    model.add(layers.Conv2D(4, kernel_size=5, strides=1, 
+              kernel_regularizer=regularizers.l2(0.001)))
+    model.add(layers.MaxPooling2D(2))
+    model.add(layers.Conv2D(8, kernel_size=3, strides=1, 
+              kernel_regularizer=regularizers.l2(0.001)))
+    model.add(layers.MaxPooling2D(2))
+    model.add(layers.Conv2D(16, kernel_size=3, strides=1, 
+              kernel_regularizer=regularizers.l2(0.001)))
+    model.add(layers.MaxPooling2D(2))
+    model.add(layers.Flatten())
+    model.add(layers.Dropout(0.5))
+    model.add(layers.Dense(128, activation='relu'))
+    model.add(layers.Dense(64, activation='relu'))
+    model.add(layers.Dense(2, activation='softmax'))
+
+    return model
+
+
 def asimetrica(im_size):
     model = models.Sequential()
     model.add(layers.Conv2D(4, kernel_size=(5,3), strides=2, input_shape=(*im_size, 1),
@@ -118,5 +141,6 @@ switcher = dict(
     media = media,
     grande = grande,
     profunda = profunda,
+    mas_profunda = mas_profunda,
     asimetrica = asimetrica,
     )
