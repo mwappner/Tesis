@@ -55,7 +55,7 @@ conv_base = VGG16(weights='imagenet',
 
 def extract_features(directory, sample_count):
     features = np.zeros(shape=(sample_count, 9, 6, 512))
-    labels = np.zeros(shape=(sample_count))
+    labels = np.zeros(shape=(sample_count, 2)) # 2 porque uso categorical
     generator = datagen.flow_from_directory(directory, **generator_params)
     
     i = 0
