@@ -121,10 +121,10 @@ ori_dir_bent = os.path.join('nuevos', 'originales', 'sonos', MODO, 'benteveo')
 resultados = {'bent':[], 'ching':[]}
 paths = {'bent':ori_dir_bent, 'ching':ori_dir_chin}
 
-with open(nombre_guardado + '/resultados.txt', 'w') as reultados:
+with open(nombre_guardado + '/resultados.txt', 'w') as resultados_out:
     for pajaro in paths:
-        print(pajaro.upper(), file=resultados)
-        print('', file=resultados)
+        print(pajaro.upper(), file=resultados_out)
+        print('', file=resultados_out)
         for i, path in enumerate(contenidos(paths[pajaro])):
             
             x = cargar_imagen(path)
@@ -135,8 +135,8 @@ with open(nombre_guardado + '/resultados.txt', 'w') as reultados:
             resultados[pajaro].append(preds)
             print(i, '{}: {:.0f}% \t {}: {:.0f}%'.format(
                     categorias[0], preds[0]*100, categorias[1], preds[1]*100),
-                    file=resultados)
-        print('', file=resultados)
+                    file=resultados_out)
+        print('', file=resultados_out)
 
 # Confusion matrix
 cm = np.array(
