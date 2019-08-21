@@ -121,19 +121,22 @@ ori_dir_bent = os.path.join('nuevos', 'originales', 'sonos', MODO, 'benteveo')
 resultados = {'bent':[], 'ching':[]}
 paths = {'bent':ori_dir_bent, 'ching':ori_dir_chin}
 
-for pajaro in paths:
-    print(pajaro.upper())
-    print()
-    for i, path in enumerate(contenidos(paths[pajaro])):
-        
-        x = cargar_imagen(path)
-        
-        preds = model.predict(x)
-        preds = np.squeeze(preds)
-        
-        resultados[pajaro].append(preds)
-        print(i, '{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))
-    print()
+with open(nombre_guardado + '/resultados.txt', 'w') as reultados:
+    for pajaro in paths:
+        print(pajaro.upper(), file=resultados)
+        print('', file=resultados)
+        for i, path in enumerate(contenidos(paths[pajaro])):
+            
+            x = cargar_imagen(path)
+            
+            preds = model.predict(x)
+            preds = np.squeeze(preds)
+            
+            resultados[pajaro].append(preds)
+            print(i, '{}: {:.0f}% \t {}: {:.0f}%'.format(
+                    categorias[0], preds[0]*100, categorias[1], preds[1]*100),
+                    file=resultados)
+        print('', file=resultados)
 
 # Confusion matrix
 cm = np.array(
@@ -156,3 +159,5 @@ print(cm)
 print('acc =', np.round(acc, 2), ', err =', np.round(err, 2))
 print('recB =', np.round(recB, 2), ', recC =', np.round(recC, 2))
 print('precB =', np.round(precB, 2), ', precC =', np.round(precC, 2))
+
+np.save(nombre_guardado + '/conf_mat.npy', cm)
