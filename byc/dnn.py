@@ -14,19 +14,21 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-from keras import layers, models, optimizers, regularizers
+#from keras import layers, models, optimizers, regularizers
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 
 from utils import new_name, contenidos
+from dnn_modelos import switcher
 
 #%% Parámetros generales
 
-#im_size = (300, 200) #medidas viejas
-im_size = (200, 300)
+im_size = (300, 200) #medidas viejas
+#im_size = (200, 300)
 BATCH_SIZE = 32
 
 MODO = 'pad'
+MODELO = 'peque' # 'peque','peque_conectada', 'media', 'grande', 'profunda', 'asimetrica'
 
 BASE_DIR = 'sintetizados','dnn', MODO
 train_dir = os.path.join(*BASE_DIR, 'train')
@@ -34,30 +36,11 @@ val_dir = os.path.join(*BASE_DIR, 'validate')
 test_dir = os.path.join(*BASE_DIR, 'test')
 ori_dir = os.path.join(*BASE_DIR, 'originales')
 
-nombre_guardado = 'modelos/byc_peque_' + MODO + '_derecho'
+nombre_guardado = '_'.join(['modelos/byc', MODO, MODELO])
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
-#%% Defino el modelo
-model = models.Sequential()
-model.add(layers.Conv2D(4, kernel_size=5, strides=2, input_shape=(*im_size, 1),
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(4)) # Será mucho?
-model.add(layers.Conv2D(4, kernel_size=3, strides=1, 
-          kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Conv2D(8, kernel_size=3, strides=1, 
-          kernel_regularizer=regularizers.l2(0.001)))
-# model.add(layers.MaxPooling2D(2))
-# model.add(layers.Conv2D(8, kernel_size=3, strides=1, 
-#           kernel_regularizer=regularizers.l2(0.001)))
-model.add(layers.MaxPooling2D(2))
-model.add(layers.Flatten())
-model.add(layers.Dropout(0.5)) #baja el overfitting
-model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(2, activation='softmax'))
-
-model.summary()
+model = switcher[MODELO](im_size)
 
 #%% Compilo y armo generadores
 
@@ -152,6 +135,7 @@ for pajaro in paths:
         print(i, '{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))
     print()
 
+# Confusion matrix
 cm = np.array(
         [[sum((b>c for b, c in resultados['bent'])), sum((b<c for b, c in resultados['bent']))],
        [sum((b>c for b, c in resultados['ching'])), sum((b<c for b, c in resultados['ching']))]]
