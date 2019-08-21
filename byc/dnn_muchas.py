@@ -138,11 +138,22 @@ for MODELO in switcher:
                         file=resultados_out)
             print('', file=resultados_out)
     
-    # Confusion matrix
-    cm = np.array(
-            [[sum((b>c for b, c in resultados['bent'])), sum((b<c for b, c in resultados['bent']))],
-           [sum((b>c for b, c in resultados['ching'])), sum((b<c for b, c in resultados['ching']))]]
-            )
-    
-    
+        # Confusion matrix
+        cm = np.array(
+                [[sum((b>c for b, c in resultados['bent'])), sum((b<c for b, c in resultados['bent']))],
+               [sum((b>c for b, c in resultados['ching'])), sum((b<c for b, c in resultados['ching']))]]
+                )
+        acc = (cm[0,0] + cm[1,1])/(len(resultados['bent']) + len(resultados['ching']))
+        err = 1-acc
+        recB = cm[0,0]/sum(cm[0])
+        recC = cm[1,1]/sum(cm[1])
+        precB = cm[0,0]/(cm[0,0]+cm[1,0])
+        precC = cm[1,1]/(cm[1,1]+cm[0,1])
+        
+        print('', file=resultados_out)
+        
+        print(cm, file=resultados_out)
+        print('acc =', np.round(acc, 2), ', err =', np.round(err, 2), file=resultados_out)
+        print('recB =', np.round(recB, 2), ', recC =', np.round(recC, 2), file=resultados_out)
+        print('precB =', np.round(precB, 2), ', precC =', np.round(precC, 2), file=resultados_out)
     np.save(nombre_guardado + '/conf_mat.npy', cm)
