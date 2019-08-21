@@ -20,7 +20,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.applications import VGG16
 
 from utils import new_name, contenidos
-from dnn_modelos import switcher
 
 #%% Parámetros generales
 
@@ -29,7 +28,7 @@ im_size = (300, 200) #medidas viejas
 BATCH_SIZE = 32
 
 MODO = 'pad'
-MODELO = 'peque' # 'peque','peque_conectada', 'media', 'grande', 'profunda', 'asimetrica'
+MODELO = 'VGG16' # 
 
 BASE_DIR = 'sintetizados','dnn', MODO
 train_dir = os.path.join(*BASE_DIR, 'train')
@@ -55,7 +54,7 @@ conv_base = VGG16(weights='imagenet',
                   input_shape=(*im_size, 3))
 
 def extract_features(directory, sample_count):
-    features = np.zeros(shape=(sample_count, 4, 4, 512))
+    features = np.zeros(shape=(sample_count, 9, 6, 512))
     labels = np.zeros(shape=(sample_count))
     generator = datagen.flow_from_directory(directory, **generator_params)
     
@@ -72,12 +71,12 @@ def extract_features(directory, sample_count):
 train_features, train_labels = extract_features(train_dir, 4000)
 validation_features, validation_labels = extract_features(val_dir, 1000)
 
-train_features = np.reshape(train_features, (4000, 4 * 4 * 512))
-validation_features = np.reshape(validation_features, (1000, 4 * 4 * 512))
+train_features = np.reshape(train_features, (4000, 9 * 6 * 512))
+validation_features = np.reshape(validation_features, (1000, 9 * 6 * 512))
 
 
 model = models.Sequential()
-model.add(layers.Dense(64, activation='relu', input_dim=4 * 4 * 512))
+model.add(layers.Dense(64, activation='relu', input_dim=9 * 6 * 512))
 model.add(layers.Dropout(0.5))
 model.add(layers.Dense(2, activation='softmax'))
 
@@ -126,7 +125,7 @@ def cargar_imagen(im_path):
     x = np.expand_dims(x, axis=0)
     return x
 
-train_generator = train_datagen.flow_from_directory(train_dir, **generator_params)
+train_generator = datagen.flow_from_directory(train_dir, **generator_params)
 categorias = {k:v for v, k in train_generator.class_indices.items()}
 imgs_paths = contenidos(ori_dir)
 for path in imgs_paths:
