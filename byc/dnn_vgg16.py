@@ -54,6 +54,7 @@ conv_base = VGG16(weights='imagenet',
                   input_shape=(*im_size, 3))
 
 def extract_features(directory, sample_count):
+    print('Extracting')
     features = np.zeros(shape=(sample_count, 9, 6, 512))
     labels = np.zeros(shape=(sample_count, 2)) # 2 porque uso categorical
     generator = datagen.flow_from_directory(directory, **generator_params)
@@ -76,7 +77,7 @@ validation_features = np.reshape(validation_features, (1000, 9 * 6 * 512))
 
 
 model = models.Sequential()
-model.add(layers.Dense(64, activation='relu', input_dim=9 * 6 * 512))
+model.add(layers.Dense(128, activation='relu', input_dim=9 * 6 * 512))
 model.add(layers.Dropout(0.5))
 model.add(layers.Dense(2, activation='softmax'))
 
@@ -123,14 +124,15 @@ def cargar_imagen(im_path):
     img = image.load_img(im_path, target_size=im_size, grayscale=True)
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
-    return x
+    p = conv_base.predict(x)
+    return p
 
 train_generator = datagen.flow_from_directory(train_dir, **generator_params)
 categorias = {k:v for v, k in train_generator.class_indices.items()}
 imgs_paths = contenidos(ori_dir)
 for path in imgs_paths:
-	x = cargar_imagen(path)
-	preds = model.predict(x)
+	p = cargar_imagen(path)
+	preds = model.predict(p)
 	preds = np.squeeze(preds)
 	print(os.path.basename(path))
 	print('{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))
