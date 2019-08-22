@@ -51,41 +51,49 @@ este_modelo = 5
 modelo = models.load_model(contenidos(modelos[este_modelo], filter_ext='.h6')[0])
 
 ########MODIFICAR ESTO###########
-imagen_nombre = contenidos(ori_dir_chin)[21]
-carpeta_de_guardado = 'ori_chin_' + os.path.basename(imagen_nombre).split('-')[0][:-1]
+imagen_nombres = contenidos(ori_dir_chin)
+imagenes = 2, 6, 9, 11, 21, 22, 26 #chingolo
+#imagenes = 0, 3, 9, 23, 24 #benteveo
+carpeta_de_guardado_base = 'ori_chin_' 
 ################################
 
-carpeta_de_guardado = new_name(os.path.join(modelos[este_modelo], carpeta_de_guardado))
-os.makedirs(carpeta_de_guardado)
-una_imagen = cargar_imagen(imagen_nombre)
-
-### Creo un modelo para mirar activaciones ###
-
-#Este modelo toma como input una imagen y da como output lo que cada capa escupe
-#layer_outputs = [layer.output for layer in modelo.layers[:5]] #cargo las capas convolucionales
-layer_outputs = [layer.output for layer in modelo.layers if 'conv' in layer.name] #cargo las capas convolucionales
-activation_model = models.Model(inputs=modelo.input, outputs=layer_outputs) #creo el modelo
-
-#miro alguna activación
-activations = activation_model.predict(una_imagen)
-#first_layer_activation = activations[0] #primera capa
-#print(first_layer_activation.shape) #pinta de los filtros de la capa
-#plt.matshow(first_layer_activation[0, :, :, 0], cmap='viridis') #quito filtro
-
-layer_names = [l.name for l in modelo.layers if 'conv' in l.name]
-
-for layer_name, layer_activation in zip(layer_names, activations): #zip simplemente me da dos iteradores
-        
-    n_features = layer_activation.shape[-1] #cant de filtros
-    size = layer_activation.shape[1:3] #tamaño del filtro de la capa (es cuadrado)
-
-    g = Grid(n_features, fill_with=np.nan, bordes=True)    
-    for ch_image in range(n_features):
-        channel_image = layer_activation[0,:, :, ch_image]
-        g.insert_image(bitificar8(channel_image, 2))
-
-    g.show()
-    plt.title('{}: {}x{}'.format(layer_name,*size))
-    plt.grid(False)
-    plt.savefig(os.path.join(carpeta_de_guardado, layer_name + '.jpg'), bbox='tight', dpi=400)
-    plt.close()
+for i in imagenes:
+    print('Corriendo', i)
+    imagen_nombre = imagen_nombres[i]
+    
+    carpeta_de_guardado = '_'.join([carpeta_de_guardado_base ,str(i), os.path.basename(imagen_nombre).split('-')[0][:-1]])
+    carpeta_de_guardado = new_name(os.path.join(modelos[este_modelo], carpeta_de_guardado))
+    os.makedirs(carpeta_de_guardado)
+    
+    una_imagen = cargar_imagen(imagen_nombre)
+    
+    ### Creo un modelo para mirar activaciones ###
+    
+    #Este modelo toma como input una imagen y da como output lo que cada capa escupe
+    #layer_outputs = [layer.output for layer in modelo.layers[:5]] #cargo las capas convolucionales
+    layer_outputs = [layer.output for layer in modelo.layers if 'conv' in layer.name] #cargo las capas convolucionales
+    activation_model = models.Model(inputs=modelo.input, outputs=layer_outputs) #creo el modelo
+    
+    #miro alguna activación
+    activations = activation_model.predict(una_imagen)
+    #first_layer_activation = activations[0] #primera capa
+    #print(first_layer_activation.shape) #pinta de los filtros de la capa
+    #plt.matshow(first_layer_activation[0, :, :, 0], cmap='viridis') #quito filtro
+    
+    layer_names = [l.name for l in modelo.layers if 'conv' in l.name]
+    
+    for layer_name, layer_activation in zip(layer_names, activations): #zip simplemente me da dos iteradores
+            
+        n_features = layer_activation.shape[-1] #cant de filtros
+        size = layer_activation.shape[1:3] #tamaño del filtro de la capa (es cuadrado)
+    
+        g = Grid(n_features, fill_with=np.nan, bordes=True)    
+        for ch_image in range(n_features):
+            channel_image = layer_activation[0,:, :, ch_image]
+            g.insert_image(bitificar8(channel_image, 2))
+    
+        g.show()
+        plt.title('{}: {}x{}'.format(layer_name,*size))
+        plt.grid(False)
+        plt.savefig(os.path.join(carpeta_de_guardado, layer_name + '.jpg'), bbox='tight', dpi=400)
+        plt.close()

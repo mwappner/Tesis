@@ -40,7 +40,7 @@ nombre_guardado = '_'.join(['modelos/byc', MODO, MODELO])
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
-#%%
+#%% Uso capas preentrenadas
 generator_params = dict(target_size=im_size, 
                         batch_size=BATCH_SIZE,
 #                        color_mode='grayscale', 
@@ -64,6 +64,7 @@ def extract_features(directory, sample_count):
         features[i * BATCH_SIZE : (i + 1) * BATCH_SIZE] = features_batch
         labels[i * BATCH_SIZE : (i + 1) * BATCH_SIZE] = labels_batch
         i += 1
+        print(i, 'de', BATCH_SIZE)
         if i * BATCH_SIZE >= sample_count:
             break
     return features, labels
@@ -74,11 +75,13 @@ validation_features, validation_labels = extract_features(val_dir, 1000)
 train_features = np.reshape(train_features, (4000, 9 * 6 * 512))
 validation_features = np.reshape(validation_features, (1000, 9 * 6 * 512))
 
+#%% Entreno capas densas
 
 model = models.Sequential()
-model.add(layers.Dense(128, activation='relu', input_dim=9 * 6 * 512))
+model.add(layers.Dense(64, activation='relu', input_dim=9 * 6 * 512))
 model.add(layers.Dropout(0.5))
 model.add(layers.Dense(64, activation='relu')) #extra
+model.add(layers.Dropout(0.5))
 model.add(layers.Dense(2, activation='softmax'))
 
 model.compile(optimizer=optimizers.RMSprop(lr=2e-5),
