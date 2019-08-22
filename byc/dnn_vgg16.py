@@ -78,6 +78,7 @@ validation_features = np.reshape(validation_features, (1000, 9 * 6 * 512))
 model = models.Sequential()
 model.add(layers.Dense(128, activation='relu', input_dim=9 * 6 * 512))
 model.add(layers.Dropout(0.5))
+model.add(layers.Dense(64, activation='relu')) #extra
 model.add(layers.Dense(2, activation='softmax'))
 
 model.compile(optimizer=optimizers.RMSprop(lr=2e-5),
