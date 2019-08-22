@@ -48,7 +48,6 @@ generator_params = dict(target_size=im_size,
 
 datagen = ImageDataGenerator(rescale=1./255)
 
-
 conv_base = VGG16(weights='imagenet', 
                   include_top=False,
                   input_shape=(*im_size, 3))
@@ -121,7 +120,7 @@ plt.close()
 # =========================
 # Pruebo con los originales
 def cargar_imagen(im_path):
-    img = image.load_img(im_path, target_size=im_size, grayscale=True)
+    img = image.load_img(im_path, target_size=im_size)
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
     p = conv_base.predict(x)
