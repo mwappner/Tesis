@@ -124,6 +124,7 @@ def cargar_imagen(im_path):
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
     p = conv_base.predict(x)
+    p = np.reshape(p, (1, 9 * 6 * 512))
     return p
 
 train_generator = datagen.flow_from_directory(train_dir, **generator_params)
