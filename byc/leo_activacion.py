@@ -47,14 +47,17 @@ def bitificar8(im,desv=1):
     return im
 #%% Elijo modelo y corro
 
-este_modelo = 5
+este_modelo = 0
 modelo = models.load_model(contenidos(modelos[este_modelo], filter_ext='.h6')[0])
 
 ########MODIFICAR ESTO###########
-imagen_nombres = contenidos(ori_dir_chin)
-imagenes = 2, 6, 9, 11, 21, 22, 26 #chingolo
-#imagenes = 0, 3, 9, 23, 24 #benteveo
-carpeta_de_guardado_base = 'ori_chin_' 
+#imagen_nombres = contenidos(ori_dir_chin)
+#imagenes = 2, 6, 9, 11, 21, 22, 26 #chingolo
+#carpeta_de_guardado_base = 'ori_chin' #chingolo
+
+imagen_nombres = contenidos(ori_dir_bent)
+imagenes = 1, 3, 9, 23, 24 #benteveo
+carpeta_de_guardado_base = 'ori_bent' #benteveo
 ################################
 
 for i in imagenes:
@@ -97,3 +100,5 @@ for i in imagenes:
         plt.grid(False)
         plt.savefig(os.path.join(carpeta_de_guardado, layer_name + '.jpg'), bbox='tight', dpi=400)
         plt.close()
+        
+print('\a')
