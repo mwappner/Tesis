@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul  2 18:02:00 2019
+Created on Wed Aug 21 03:03:18 2019
 
 @author: Marcos
 """
@@ -14,12 +14,12 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-#from keras import layers, models, optimizers, regularizers
+from keras import layers, models, optimizers, regularizers
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
+from keras.applications import VGG16
 
 from utils import new_name, contenidos
-from dnn_modelos import switcher
 
 #%% Parámetros generales
 
@@ -28,7 +28,7 @@ im_size = (300, 200) #medidas viejas
 BATCH_SIZE = 32
 
 MODO = 'pad'
-MODELO = 'mas_profunda' # 'peque','peque_conectada', 'media', 'grande', 'profunda', 'mas_profunda', 'asimetrica'
+MODELO = 'VGG16' # 
 
 BASE_DIR = 'sintetizados','dnn', MODO
 train_dir = os.path.join(*BASE_DIR, 'train')
@@ -40,32 +40,57 @@ nombre_guardado = '_'.join(['modelos/byc', MODO, MODELO])
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
-model = switcher[MODELO](im_size)
-
-#%% Compilo y armo generadores
-
-model.compile(optimizer='rmsprop',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-
-# Uso un generator para train y uno para test por si decido usar augmentation
-train_datagen = ImageDataGenerator(rescale=1./255)
-test_datagen = ImageDataGenerator(rescale=1./255)
-
+#%% Uso capas preentrenadas
 generator_params = dict(target_size=im_size, 
                         batch_size=BATCH_SIZE,
-                        color_mode='grayscale', 
+#                        color_mode='grayscale', 
                         class_mode='categorical')
 
-train_generator = train_datagen.flow_from_directory(train_dir, **generator_params)
-val_generator = train_datagen.flow_from_directory(val_dir, **generator_params)
+datagen = ImageDataGenerator(rescale=1./255)
 
-history=model.fit_generator(
-            train_generator,
-            steps_per_epoch=100,
-            epochs=8,
-            validation_data=val_generator,
-            validation_steps=100) 
+conv_base = VGG16(weights='imagenet', 
+                  include_top=False,
+                  input_shape=(*im_size, 3))
+
+def extract_features(directory, sample_count):
+    print('Extracting')
+    features = np.zeros(shape=(sample_count, 9, 6, 512))
+    labels = np.zeros(shape=(sample_count, 2)) # 2 porque uso categorical
+    generator = datagen.flow_from_directory(directory, **generator_params)
+    
+    i = 0
+    for inputs_batch, labels_batch in generator:
+        features_batch = conv_base.predict(inputs_batch)
+        features[i * BATCH_SIZE : (i + 1) * BATCH_SIZE] = features_batch
+        labels[i * BATCH_SIZE : (i + 1) * BATCH_SIZE] = labels_batch
+        i += 1
+        print(i, 'de', BATCH_SIZE)
+        if i * BATCH_SIZE >= sample_count:
+            break
+    return features, labels
+
+train_features, train_labels = extract_features(train_dir, 4000)
+validation_features, validation_labels = extract_features(val_dir, 1000)
+
+train_features = np.reshape(train_features, (4000, 9 * 6 * 512))
+validation_features = np.reshape(validation_features, (1000, 9 * 6 * 512))
+
+#%% Entreno capas densas
+
+model = models.Sequential()
+model.add(layers.Dense(64, activation='relu', input_dim=9 * 6 * 512))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(64, activation='relu')) #extra
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(2, activation='softmax'))
+
+model.compile(optimizer=optimizers.RMSprop(lr=2e-5),
+loss='binary_crossentropy',
+metrics=['acc'])
+history = model.fit(train_features, train_labels,
+                    epochs=30,
+                    batch_size=20,
+                    validation_data=(validation_features, validation_labels))
 
 model.save(nombre_guardado + '/byc.h6')
 
@@ -99,16 +124,19 @@ plt.close()
 # =========================
 # Pruebo con los originales
 def cargar_imagen(im_path):
-    img = image.load_img(im_path, target_size=im_size, grayscale=True)
+    img = image.load_img(im_path, target_size=im_size)
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
-    return x
+    p = conv_base.predict(x)
+    p = np.reshape(p, (1, 9 * 6 * 512))
+    return p
 
+train_generator = datagen.flow_from_directory(train_dir, **generator_params)
 categorias = {k:v for v, k in train_generator.class_indices.items()}
 imgs_paths = contenidos(ori_dir)
 for path in imgs_paths:
-	x = cargar_imagen(path)
-	preds = model.predict(x)
+	p = cargar_imagen(path)
+	preds = model.predict(p)
 	preds = np.squeeze(preds)
 	print(os.path.basename(path))
 	print('{}: {:.0f}% \t {}: {:.0f}%'.format(categorias[0], preds[0]*100, categorias[1], preds[1]*100))

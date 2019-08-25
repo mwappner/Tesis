@@ -21,7 +21,8 @@ modelo.summary() #recuerdo qué tenía
 # Carpeta donde guarda las imagenes de los filtros
 # save_dir = make_dirs_noreplace(os.path.join(
 #         'filtros', os.path.splitext(nombre_modelo)[0]))
-save_dir = ubicacion
+save_dir = os.path.join(ubicacion, 'filtros')
+os.makedirs(save_dir)
 
 #cre una func. que arma la imagen visualizada
 def generate_pattern(layer_name, filter_index, modelo, iteraciones=40):
@@ -53,7 +54,7 @@ for capa_ind, nombre in enumerate(nombres):
     # Cantidad de filtros en esta capa
     cant_filtros = modelo.layers[capa_ind].output_shape[3] #cant de filtros
     # Una grilla donde meto las imagenes de cada filtro
-    g = Grid(cant_filtros, fill_with=0, trasponer=True) 
+    g = Grid(cant_filtros, fill_with=np.nan, trasponer=True) 
 
     # Proceso los filtros y los meto en la grilla
     for filtro_ind in range(cant_filtros):
@@ -66,5 +67,5 @@ for capa_ind, nombre in enumerate(nombres):
     # plt.imshow(g.grid)
     g.show()
     nombre = new_name(os.path.join(save_dir, 'filtros_{}.jpg'.format(nombre)))
-    plt.savefig(nombre)
+    plt.savefig(nombre, bbox='tight', dpi=400)
     plt.close()

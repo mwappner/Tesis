@@ -44,20 +44,20 @@ def procesar_chingolo(archivo, destino, dur=None):
     s.guardar(ubicacion=destino)
 
 def mover(origen, destino, cant, subcarpeta='train'):
-    '''los rachivos en la carpeta train de origen se van a destino (validate o test) correspondiente.'''
+    '''los archivos en la carpeta train de origen se van a destino (validate o test) correspondiente.'''
     for file in contenidos(origen)[-cant:]:
-        destino = file.replace(subcarpeta, destino)
-        os.rename(file, destino)
+        path_destino = file.replace(subcarpeta, destino)
+        os.rename(file, path_destino)
     
 #%%
 
 DURACION = 1.8 # tomado de la síntesis de chingolos, el más largo de los dos
 
-for file in contenidos(carpeta_de_salida_bent)[-100:]:
+for file in contenidos(carpeta_de_salida_bent):
 	for modo in modos: #lo hago en los tres modos
 		procesar_benteveo(file, destino=carpeta_de_llegada_bent(modo), dur=DURACION, modo=modo)
 
-for file in contenidos(carpeta_de_salida_ching)[-100:]:
+for file in contenidos(carpeta_de_salida_ching):
    	procesar_chingolo(file, destino=carpeta_de_llegada_ching('pad'), dur=DURACION)
 
 #copio los chingolos a las carpetas de los tres modos
