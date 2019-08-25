@@ -68,6 +68,41 @@ def natural_sort(l):
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
     return sorted(l, key = alphanum_key)
 
+
+def find_numbers(string):
+    
+    """Returns a list of numbers found on a given string
+    
+    Parameters
+    ----------
+    string: str
+        The string where you search.
+    
+    Returns
+    -------
+    list
+        A list of numbers (each an int or float).
+    
+    Raises
+    ------
+    "There's no number in this string" : TypeError
+        If no number is found.
+    """
+    
+    numbers = re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", string)
+    
+    if not numbers:
+        raise TypeError("There's no number in this string")
+    
+    for i, n in enumerate(numbers):
+        if '.' in n:
+            numbers[i] = float(n)
+        else:
+            numbers[i] = int(n) 
+    
+    return numbers
+
+
 class contenidos(list):
     '''Subclase de lista que toma un directorio y crea una lista de los contenidos.
     
