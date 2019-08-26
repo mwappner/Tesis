@@ -115,7 +115,7 @@ class contenidos(list):
             Decide si los elementos de la lista son el contenido del directorio en cuestión,
             si se le agrega el nombre del directorio: ['capeta/subcarpeta1', 'capeta/subcarpeta2',
             'capeta/archivo.py']. Default: True
-        natsort = bool
+        natsort : bool
             Decide si ordenar o no los contenidos de la carpeta utilizando "orden natural", en vez
             de alfanumérico. Defualt = True
         filter_ext : None, str, iterable
@@ -452,7 +452,45 @@ class FiltroSonograma:
         return nombre
 
 class Grid:
-    '''Una clase para crear y llenar una grilla con imagenes.'''
+    '''Una clase para crear y llenar una grilla con imagenes. A menos que 
+    especifique una cantidad de columnas o de filas, la grilla creada será 
+    tan cuadrada como sea posible. Funciona con imágenes de un solo canal 
+    (escala de grises) y de tres canales (RGB).
+    
+    -----------
+    Parámetros:
+        cant : int
+            cantidad de imagenes que se introducirán en la grilla. Es necesario
+            pasar este parámetro en la construcción de la clase para poder 
+            planear el tamaño de la grilla.
+        fill_with : int, float
+            elemento con el que rellenar los lugares vacíos de la grilla. Afecta 
+            cómo se verá la grilla al graficar. Default: np.nan
+        trasponer : bool
+            decide si trasponer la grilla calculada o no. Por defecto, si la 
+            grilla no es cuadrada, tendrá más columnas que filas. Trasponer 
+            invierte esto. Afecta también a grillas con cantidades persnoalizadas
+            de filas y columnas. Default: False
+        bordes : bool
+            decide si poner bordes entre las imagenes y márgenes en torno a la 
+            imagen. Default: True
+        cant_col : int
+            fija cantidad de columnas a utilizar, sobreescribiendo la cantidad
+            calculada para optimizar cuadradez de la grilla. Si cant_col=None, 
+            utilizará la calulada. Default: None
+        cant_row : int
+            fija cantidad de filas a utilizar, sobreescribiendo la cantidad
+            calculada para optimizar cuadradez de la grilla. Si cant_row=None, 
+            utilizará la calulada. Default: None
+            
+    --------
+    Métodos:
+        insert_image(im):
+            Inserta una imagen a la grilla
+        show(**kwargs):
+            Muestra la grilla en su estado actual utilizando plt.imshow(). 
+            Pasa los argumentos extra a imshow.
+    '''
        
     def __init__(self, cant, fill_with=np.nan, trasponer=False, 
                  bordes=True, cant_col=None, cant_row=None ):
