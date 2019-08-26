@@ -148,7 +148,12 @@ class contenidos(list):
         '''Si full_path=True, los elementos de la lista serán los contenidos de la carpeta
         apendeados con el nombre de la carpeta en sí. Si no, serán sólo los contenidos, en
         cuyo caso habrá algunas funconalidads no disponibles.'''
+
         self.carpeta = carpeta or os.getcwd()
+        if not os.path.isdir(self.carpeta):
+            raise NotADirectoryError(
+                    'El nombre del directorio no es válido: '+ 
+                    self.carpeta)
         self._full_path = full_path
         self.filter_ext = filter_ext
 
@@ -449,12 +454,17 @@ class FiltroSonograma:
 class Grid:
     '''Una clase para crear y llenar una grilla con imagenes.'''
        
-    def __init__(self, cant, fill_with=np.nan, trasponer=False, bordes=True):
+    def __init__(self, cant, fill_with=np.nan, trasponer=False, 
+                 bordes=True, cant_col=None, cant_row=None ):
 
         self.cant = cant #cantidad de imagenes
         self.trasponer = trasponer #por default, la grilla es más ancha que alta
         self.bordes = bordes #si debe o no haber un margen entre figus.
-        self.shape = self._cant_to_mat() #tamaño de la matriz de imagenes
+        
+        if cant_col is not None and cant_row is not None:
+            raise ValueError('Sólo se puede especificar cantidad de filas o cantidad de columnas. La otra será deducida de la cantidad de elementos')
+            
+        self.shape = self._cant_to_mat(cant_col, cant_row) #tamaño de la matriz de imagenes
 
         self.grid = None #la grilla a llenar con imagenes
         #self.im_shape = None #tamaño de la imagen
@@ -474,11 +484,20 @@ class Grid:
         else:
             self._im_shape_bordes = self.im_shape
 
-    def _cant_to_mat(self):
+    def _cant_to_mat(self, cant_col, cant_row):
         '''Dimensiones de la cuadrícula más pequeña y más cuadrada
         posible que puede albergar [self.cant] cosas.'''
-        col = int(np.ceil(np.sqrt(self.cant)))
-        row = int(round(np.sqrt(self.cant)))
+        
+        if cant_col is not None:
+            col = int(cant_col)
+            row = int(np.ceil(self.cant/col))
+        elif cant_row is not None:
+            row = int(cant_row)
+            col = int(np.ceil(self.cant/row))
+        else:
+            col = int(np.ceil(np.sqrt(self.cant)))
+            row = int(round(np.sqrt(self.cant)))
+            
         if self.trasponer:
             return col, row
         else:
