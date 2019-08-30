@@ -109,6 +109,7 @@ def grande_shallow(im_size):
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(2, activation='softmax'))
     
+    return model
 
 def profunda(im_size):
     model = models.Sequential()
@@ -148,7 +149,7 @@ def mas_profunda(im_size):
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(128, activation='relu'))
-    model.add(layers.Dropout(0.5))
+    # model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(2, activation='softmax'))
 
