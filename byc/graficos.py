@@ -73,14 +73,14 @@ data = pd.DataFrame(todos_df)
 data.set_index('nombre', inplace=True)
 
 #%% Selecciono las que quiero graficar
-#seleccionados = [
-#        'peque_conectada_2', 
-#        'asimetrica_2',
-#        'grande_shallow_4',
-##        'mas_profunda',
-#        'peque_densa_2',
-#        'profunda_2',        
-#        ]
+seleccionados = [
+        'peque_conectada_2', 
+        'asimetrica_2',
+        'grande_shallow_4',
+#        'mas_profunda',
+        'peque_densa_2',
+        'profunda_2',        
+        ]
 
 
 
@@ -89,47 +89,49 @@ data.set_index('nombre', inplace=True)
 pdata = data.loc[seleccionados]
 pdata.sort_values('nparams', inplace=True)
 
-xax_vals = [x for _, x in zip(seleccionados, 'ABCDEFGHIJKLMN')]
+nombres = 'pequeña', 'asimétrica',  'pequeña\ndensa','grande','grande\nprofunda'
+#xax_vals = [x for _, x in zip(seleccionados, 'ABCDEFGHIJKLMN')] #para A, B, C, D
+xax_vals = [x for _, x in zip(seleccionados,nombres)]
 
-pdata = data.copy()
+#pdata = data.copy()
 pdata.sort_values('nparams', inplace=True)
-xax_vals = list(pdata.index)
+#xax_vals = list(pdata.index)
 
 fig, (acc, prec, rec, cant) = plt.subplots(4,1, sharex=True)
 fig.set_size_inches([5, 6 ])
 
-acc.plot(xax_vals, pdata['acc'], 'o', color='C2')
+acc.plot(xax_vals, pdata['acc'], 'o', color='C0')
 acc.grid() 
-acc.set_ylabel('Accuracy')
+acc.set_ylabel('Exactitud')
 acc.set_ylim(.85, 1.03)
 
-prec.plot(xax_vals, pdata['precB'],'d', label='benteveos')
-prec.plot(xax_vals, pdata['precC'],'*', label='chingolos')
+prec.plot(xax_vals, pdata['precB'],'d', label='benteveos', color='C1')
+prec.plot(xax_vals, pdata['precC'],'*', label='chingolos', color='C2')
 prec.grid()
 #prec.legend()
-prec.set_ylabel('Precicion')
+prec.set_ylabel('Precisión')
 prec.set_ylim(.8, 1.03)
 
-rec.plot(xax_vals, pdata['recB'],'d', label='benteveos')
-rec.plot(xax_vals, pdata['recC'],'*', label='chingolos')
+rec.plot(xax_vals, pdata['recB'],'d', label='benteveos', color='C1')
+rec.plot(xax_vals, pdata['recC'],'*', label='chingolos', color='C2')
 rec.grid()
-rec.set_ylabel('Recall')
+rec.set_ylabel('Exhaust.')
 rec.set_ylim(.8, 1.03)
 #rec.legend(loc='lower left', framealpha=1, edgecolor='k', bbox_to_anchor=(0, -.5))
 
-cant.bar(xax_vals, pdata['nparams'],color='C2')
+cant.bar(xax_vals, pdata['nparams'],color='C0')
 cant.grid()
-cant.set_ylabel('Param. count')
+cant.set_ylabel('Cant. params.')
 cant.set_xlabel('Modelo')
 
 #Para que aparezca la leyenda de los otros plots
-cant.plot(0,0,'d', label='benteveos')
-cant.plot(0,0,'*', label='chingolos')
+cant.plot(0,0,'d', label='benteveos', color='C1')
+cant.plot(0,0,'*', label='chingolos', color='C2')
 cant.legend(loc='upper left', framealpha=1, edgecolor='k', bbox_to_anchor=(0,1.35))
 
 #cant.set_xlim([-0.4,4.4])
 cant.set_yscale('log')
-plt.xticks(rotation=90)
+plt.xticks(rotation=60)
 
 
 fig.tight_layout()
@@ -139,3 +141,4 @@ fig.subplots_adjust(hspace=0.07)
 plt.margins(0.2)
 ## Tweak spacing to prevent clipping of tick-labels
 plt.subplots_adjust(bottom=0.3)
+fig.savefig('plots/cinco_modelos_muy_grande_colores.png', dpi=600)

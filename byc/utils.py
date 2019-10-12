@@ -9,8 +9,8 @@ from skimage import filters
 import numpy as np
 
 #para correr remotamente
-import matplotlib
-matplotlib.use('Agg')
+#import matplotlib
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from PIL import Image as pil_image
@@ -418,7 +418,7 @@ class FiltroSonograma:
             plt.title(self.archivo, fontsize=15)
 
 
-    def guardar(self, nombre=None, ubicacion=None, extension='jpg'):
+    def guardar(self, nombre=None, ubicacion=None, extension='jpg', **args):
         '''Guarda el sonograma en 'ubicacion/nombre.extension'. Si no se le da nombre
         o ubicación, utiliza el del archivo anterior. Notar que nunca reemplazará dicho 
         archivo.'''
@@ -444,7 +444,7 @@ class FiltroSonograma:
         
         #Guardo
         nombre = new_name(os.path.join(ubicacion, '.'.join((nombre,extension))))
-        fig.savefig(nombre, dpi=100)
+        fig.savefig(nombre, dpi=100, **args)
         plt.close(fig)
         
         print('Saved: {}'.format(nombre))
