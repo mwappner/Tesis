@@ -11,8 +11,8 @@ from utils import FiltroSonograma, contenidos
 
 modos = 'pad', 'stretch', 'center'
 
-bent_original = 'nuevos/originales/benteveo_BVRoRo_highpass_notch.wav'
-ching_original = 'nuevos/originales/chingolo_XC462515_denoised.wav'
+#bent_original = 'nuevos/originales/benteveo_BVRoRo_highpass_notch.wav'
+#ching_original = 'nuevos/originales/chingolo_XC462515_denoised.wav'
 #carpeta_de_llegada_ori = lambda modo: os.path.join('sintetizados', 'dnn', modo, 'originales')
 carpeta_de_llegada_chin = lambda modo: os.path.join('nuevos', 'originales', 'sonos', modo, 'chingolo')
 carpeta_de_llegada_bent = lambda modo: os.path.join('nuevos', 'originales', 'sonos', modo, 'benteveo')
@@ -52,9 +52,8 @@ def mover(origen, destino, cant, subcarpeta='train'):
         destino = file.replace(subcarpeta, destino)
         os.rename(file, destino)
     
-#ubicacion_cantos = 'nuevos/originales'
-#ubicacion_cantos = 'nuevos/originales/xenocanto/Benteveo'
-ubicacion_cantos = 'nuevos/originales/xenocanto/Chingolo'
+ubicacion_cantos = 'nuevos/originales/xenocanto/nuevos (temp)/bent/cortados'
+#ubicacion_cantos = 'nuevos/originales/xenocanto/nuevos (temp)/ching/cortados'
 originales = contenidos(ubicacion_cantos, filter_ext='.wav')
 originales.print_orden()
 
@@ -68,10 +67,10 @@ for modo in modos:
     for k in elegidos:
         sonido = originales[k]
         try:
-            if 'benteveo' in sonido.lower():
+            if 'bent' in sonido.lower():
                 procesar_benteveo(sonido, carpeta_de_llegada_bent(modo), dur=DURACION, modo=modo)
                 
-            if 'chingolo' in sonido.lower():
+            if 'ching' in sonido.lower():
                 procesar_chingolo(sonido, carpeta_de_llegada_chin(modo), dur=DURACION, modo=modo)
         except ValueError:
             print(k, 'falló\n', sonido)

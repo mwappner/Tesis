@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from utils import contenidos, find_numbers
+from utils import contenidos, find_numbers, load_img
 
 ubi = 'modelos'
 modelos = contenidos(ubi)
@@ -142,3 +142,24 @@ plt.margins(0.2)
 ## Tweak spacing to prevent clipping of tick-labels
 plt.subplots_adjust(bottom=0.3)
 fig.savefig('plots/cinco_modelos_muy_grande_colores.png', dpi=600)
+
+#%% ============ GRAFICO SONOGRAMAS ============
+
+bent = 'sintetizados/dnn/pad/test/benteveo'
+ching = 'sintetizados/dnn/pad/test/chingolo'
+
+#bent_ims = contenidos(bent)
+i0 = np.array(load_img(contenidos(bent)[0], color_mode='grayscale'))
+i0 = np.zeros(i0.shape)
+
+for im in contenidos(bent):
+    i0 += np.array(load_img(im, color_mode='grayscale'))
+    
+i0 /= i0.max()    
+plt.imshow(i0, cmap='viridis')
+
+    
+
+
+
+
