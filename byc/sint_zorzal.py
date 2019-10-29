@@ -13,7 +13,7 @@ it creates wav
 import os
 
 cant_sintesis = 1 #cuantos cantos voy a sintetizar
-nombre_base = 'chingolo' #nombre de los sonogramas
+nombre_base = 'zorzal' #nombre de los sonogramas
 path_sono = os.path.join('nuevos', 'sonogramas')
 path_audio = os.path.join('nuevos', 'audios')
 
@@ -34,11 +34,21 @@ creo_nombre = lambda path, base, formato: new_name(os.path.join(path, base + for
 global estimulo1
 global destimulodt1
 
+tiempo_total=1.94
+
 gamma=24000
+escala = 1.6 #factor de escala para pasar de chingolo a zorzal
 uoch, uolb, uolg, rb, rdis = (350/5.0)*1e8, 1e-4, 1/20., 5e6, 2.4e5 # 2.4e5 , y con 350/3.0, la frec de la oec en 4000 Hz
 fsamp, L=  882000.0, 0.025
+
+#reescalo componentes: 
+uoch *= escala**3
+uolb *= escala
+uolg *= escala
+L *= escala
+
+#calculo cantidades asociadas
 dt = 1/fsamp
-tiempo_total=1.66
 N=int((L/(350*dt))//1) #retardo del sonido (por la refelxión)
 
 cant_puntos = np.int(tiempo_total/(dt))
@@ -160,28 +170,33 @@ for _ in range(cant_sintesis):
     # Genero los parámetros de los cantos
     # -----------------------------------
     
-    ### Chingolo_XC462515_denoised
-    f = .5
-    rectas(ti=0.086, tf=0.168, wi=4560-300, wf=4711-300, 
-           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
+    ### XC351066 entre 5.85 y 7.79
     
-    expo(ti=0.315, tf=0.569, wi=4260, wf=4030, tau=-1.5,
-           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03)
+    t1, medio1, t2 = 0.03, 0.13, 0.25
+    w1, w2, w3, w4 = 2222, 2350, 1870, 1950
+    rectas(t1, medio1, w1, w2, 1, frecuencias, beta, amplitudes, fin=False, param=2, d=0.02)
+    rectas(medio1, t2, w3, w4, 1, frecuencias, beta, amplitudes, inicio=False)
+    d = 0.36
+    rectas(t1+0.02+d, medio1+d, w1, w2, 1, frecuencias, beta, amplitudes, fin=False, param=2, d=0.02)
+    rectas(medio1+d, t2+d, w3, w4, 1, frecuencias, beta, amplitudes, inicio=False)
     
-    medio=0.729
-    rectas(ti=0.677, tf=medio, wi=6030, wf=5730,
-         f=f, freqs=frecuencias, beta=beta, amps=amplitudes, param=2, d=0.03,
-         fin=False)
-    expo(ti=medio, tf=0.961, wi=5736, wf=1370, tau=0.8,
-           f=f, freqs=frecuencias, beta=beta, amps=amplitudes, inicio=False)
+    medio2, medio3, medio4 = 0.82, 0.89, 1.03
+    w1, w2 = 2550, 2681
+    rectas(0.8, medio2, 2167, w1, 1, frecuencias, beta, amplitudes, fin=False, param=2, d=0.05)
+    rectas(medio2, medio3, w1, w2, 1, frecuencias, beta, amplitudes, fin=False, inicio=False)
+    rectas(medio3, 0.92, w2, 3190, 1, frecuencias, beta, amplitudes, inicio=False)
+    expo(1.01, medio4, 2190, 2573, 1, frecuencias, beta, amplitudes, tau=0.8, fin=False, param=2, d=0.05)
+    rectas(medio4, 1.12, 2394, 2340, 1, frecuencias, beta, amplitudes, inicio=False)
     
-    deltat, t0, t1 = 0.0028, 1.08, 1.124
-    paso = deltat + t1 - t0
-    for k in range(7):
-    #        rectas(t0 + paso*k, t1 + paso*k, 6945, 3839,
-    #               f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
-        rectas(t0 + paso*k, t1 + paso*k, 7030, 3760, 
-             f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
+    t1, medio1, medio2, t2 = 1.38, 1.4, 1.47, 1.53
+    w1, w2, w3, w4, w5, w6 = 1600, 2060, 1845, 1790, 2222, 1830
+    expo(t1, medio1, w1, w2, 1, frecuencias, beta, amplitudes, tau=0.8, fin=False, param=2, d=0.05)
+    rectas(medio1, medio2, w3, w4, 1, frecuencias, beta, amplitudes, inicio=False)
+    rectas(medio2, t2, w5, w6, 1, frecuencias, beta, amplitudes)
+    d = 0.3
+    expo(t1+d, medio1+d, w1, w2, 1, frecuencias, beta, amplitudes, tau=0.8, fin=False, param=2, d=0.05)
+    rectas(medio1+d, medio2+d, w3, w4, 1, frecuencias, beta, amplitudes, inicio=False)
+    rectas(medio2+d, t2+d, w5, w6, 1, frecuencias, beta, amplitudes)
 
     
     tiempo = np.linspace(0, tiempo_total, cant_puntos)

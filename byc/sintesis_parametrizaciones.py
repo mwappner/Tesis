@@ -101,7 +101,7 @@ rectas(0.01, tiempo_total-0.01, 200, 5000,
 nombre_base = 'uoch={:.2e}_uolb={}_uolg={:.2f}'.format(uoch, uolb, uolg)
 
 --- CHINGOLO ---
-#%%%3 El resto están en el cuaderno, buscarlas ahí. #%%%#
+#%%%# El resto están en el cuaderno, buscarlas ahí. #%%%#
 
 ###Original (Gabo)
 rectas(0.03,0.42,4529,3200,0.15,frecuencias,beta,amplitudes)
@@ -147,3 +147,33 @@ for k in range(7):
     rectas(t0 + paso*k, t1 + paso*k, 7030, 3760, 
          f=1, freqs=frecuencias, beta=beta, amps=amplitudes)
 
+--- ZORZAL ---
+#%%%#
+
+### XC351066 entre 5.85 y 7.79
+
+t1, medio1, t2 = 0.02, 0.13, 0.25
+w1, w2, w3, w4 = 2222, 2350, 1870, 1950
+rectas(t1, medio1, w1, w2, frecuencias, beta, amplitudes)
+rectas(medio1, t2, w3, w4, frecuencias, beta, amplitudes)
+d = 0.36
+rectas(t1+d, medio1+d, w1, w2, frecuencias, beta, amplitudes)
+rectas(medio1+d, t2+d, w3, w4, frecuencias, beta, amplitudes)
+
+medio2, medio3, medio4 = 0.82, 0.89, 1.03
+w1, w2 = 2550, 2681
+rectas(0.8, medio2, 2167, w1, frecuencias, beta, amplitudes)
+rectas(medio2, medio3, w1, w2, frecuencias, beta, amplitudes)
+rectas(medio3, 0.92, w2, 3190, frecuencias, beta, amplitudes)
+expo(1.01, medio4, 2190, 2573, 0.8, frecuencias, beta, amplitudes)
+rectas(medio4, 1.12, 2394, 2340, frecuencias, beta, amplitudes)
+
+t1, medio1, medio2, t2 = 1.38, 1.4, 1.47, 1.53
+w1, w2, w3, w4, w5, w6 = 1600, 2060, 1845, 1790, 2222, 1830
+expo(t1, medio1, w1, w2, 0.8, frecuencias, beta, amplitudes)
+rectas(medio1, medio2, w3, w4, frecuencias, beta, amplitudes)
+rectas(medio2, t2, w5, w6, frecuencias, beta, amplitudes)
+d = 0.3
+expo(t1+d, medio1+d, w1, w2, 0.8, frecuencias, beta, amplitudes)
+rectas(medio1+d, medio2+d, w3, w4, frecuencias, beta, amplitudes)
+rectas(medio2+d, t2+d, w5, w6, frecuencias, beta, amplitudes)

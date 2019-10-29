@@ -37,6 +37,8 @@ test_dir = os.path.join(*BASE_DIR, 'test')
 #ori_dir = os.path.join(*BASE_DIR, 'originales')
 
 for MODELO in switcher:
+    
+    print('\n DOING NOW \t ', MODELO, '\n')
     nombre_guardado = '_'.join(['modelos/aug/aug', MODO, MODELO])
     nombre_guardado = new_name(nombre_guardado)
     os.makedirs(nombre_guardado)
@@ -74,7 +76,7 @@ for MODELO in switcher:
     history=model.fit_generator(
                 train_generator,
                 steps_per_epoch=100,
-                epochs=8,
+                epochs=10,
                 validation_data=val_generator,
                 validation_steps=100) 
     
@@ -126,8 +128,8 @@ for MODELO in switcher:
     
     # =========================
     # Testeo para cantos reales
-    ori_dir_chin = os.path.join('nuevos', 'originales', 'sonos', MODO, 'chingolo')
-    ori_dir_bent = os.path.join('nuevos', 'originales', 'sonos', MODO, 'benteveo')
+    ori_dir_chin = os.path.join(test_dir, 'chingolo')
+    ori_dir_bent = os.path.join(test_dir, 'benteveo')
     
     resultados = {'bent':[], 'ching':[]}
     paths = {'bent':ori_dir_bent, 'ching':ori_dir_chin}
@@ -163,6 +165,7 @@ for MODELO in switcher:
         print('', file=resultados_out)
         
         print(cm, file=resultados_out)
+        print(cm)
         print('acc =', np.round(acc, 2), ', err =', np.round(err, 2), file=resultados_out)
         print('recB =', np.round(recB, 2), ', recC =', np.round(recC, 2), file=resultados_out)
         print('precB =', np.round(precB, 2), ', precC =', np.round(precC, 2), file=resultados_out)

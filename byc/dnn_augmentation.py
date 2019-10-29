@@ -27,15 +27,15 @@ im_size = (300, 200) #medidas viejas
 BATCH_SIZE = 32
 
 MODO = 'pad'
-MODELO = 'peque' # 'peque','peque_conectada', 'media', 'grande', 'profunda', 'mas_profunda', 'asimetrica'
+MODELO = 'mas_profunda' # 'peque','peque_conectada', 'peque_densa', 'media', 'grande', 'grande_shallow', 'profunda', 'mas_profunda', 'asimetrica'
 
-BASE_DIR = 'nuevos', 'dnn'
+BASE_DIR = 'nuevos', 'dnn chica'
 train_dir = os.path.join(*BASE_DIR, 'train')
 val_dir = os.path.join(*BASE_DIR, 'validate')
 test_dir = os.path.join(*BASE_DIR, 'test')
 #ori_dir = os.path.join(*BASE_DIR, 'originales')
 
-nombre_guardado = '_'.join(['modelos/aug/aug', MODO, MODELO])
+nombre_guardado = '_'.join(['modelos/aug2/aug', MODO, MODELO])
 nombre_guardado = new_name(nombre_guardado)
 os.makedirs(nombre_guardado)
 
